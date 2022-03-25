@@ -46,8 +46,14 @@
             <th style="padding: 0 15px;">Bas 25x50</th>
             <th style="padding: 0 15px;">Bas 50x25</th>
             <th style="padding: 0 15px;">Bas 50x50</th>
+            <th style="padding: 0 15px;">Lastre 25x25</th>
             <th style="padding: 0 15px;">Lastre 25x50</th>
+            <th style="padding: 0 15px;">Lastre 25x75</th>
+            <th style="padding: 0 15px;">Lastre 25x100</th>
+            <th style="padding: 0 15px;">Lastre 50x25</th>
             <th style="padding: 0 15px;">Lastre 50x50</th>
+            <th style="padding: 0 15px;">Lastre 50x75</th>
+            <th style="padding: 0 15px;">Lastre 50x100</th>
           </tr>
         </thead>
         <tbody>
@@ -56,8 +62,14 @@
             <td>{{ getBasamenti("25x50") }}</td>
             <td>{{ getBasamenti("50x25") }}</td>
             <td>{{ getBasamenti("50x50") }}</td>
+            <td>{{ getLastre().L25x25 }}</td>
             <td>{{ getLastre().L25x50 }}</td>
+            <td>{{ getLastre().L25x75 }}</td>
+            <td>{{ getLastre().L25x100 }}</td>
+            <td>{{ getLastre().L50x25 }}</td>
             <td>{{ getLastre().L50x50 }}</td>
+            <td>{{ getLastre().L50x75 }}</td>
+            <td>{{ getLastre().L50x100 }}</td>
           </tr>
         </tbody>
       </table>
@@ -82,7 +94,8 @@ export default defineComponent({
         columns: 10
       } as DrawPlan,
       drawSelection: "25x25_50" as string,
-      selectedCellSections: {} as SelectedCellSections
+      selectedCellSections: {} as SelectedCellSections,
+      singleSlabs: true
     }
   },
   computed: {
@@ -242,54 +255,195 @@ export default defineComponent({
     },
 
     //lastre
+    getSingleBlockNearCells(row: number, column: number, section: number): {
+      topCellSectionId: string;
+      rightCellSectionId: string;
+      bottomCellSectionId: string;
+      leftCellSectionId: string;
+    } {
+      let topCellSectionId = "";
+      let rightCellSectionId = "";
+      let bottomCellSectionId = "";
+      let leftCellSectionId = "";
+      if(section == 1) {
+          topCellSectionId = this.getCellSectionId(row - 1, column, 3);
+          rightCellSectionId = this.getCellSectionId(row, column, 2);
+          bottomCellSectionId = this.getCellSectionId(row, column, 3);
+          leftCellSectionId = this.getCellSectionId(row, column - 1, 2);
+        } else if(section == 2) {
+          topCellSectionId = this.getCellSectionId(row - 1, column, 4);
+          rightCellSectionId = this.getCellSectionId(row, column + 1, 1);
+          bottomCellSectionId = this.getCellSectionId(row, column, 4);
+          leftCellSectionId = this.getCellSectionId(row, column , 1);
+        } else if(section == 3) {
+          topCellSectionId = this.getCellSectionId(row, column, 1);
+          rightCellSectionId = this.getCellSectionId(row, column, 4);
+          bottomCellSectionId = this.getCellSectionId(row + 1, column, 1);
+          leftCellSectionId = this.getCellSectionId(row, column - 1 , 4);
+        } else if(section == 4) {
+          topCellSectionId = this.getCellSectionId(row, column, 2);
+          rightCellSectionId = this.getCellSectionId(row, column + 1, 3);
+          bottomCellSectionId = this.getCellSectionId(row + 1, column, 2);
+          leftCellSectionId = this.getCellSectionId(row, column , 3);
+        }
+        return {
+          topCellSectionId,
+          rightCellSectionId,
+          bottomCellSectionId,
+          leftCellSectionId
+        };
+    },
+
     getLastreSingle(res: LastreCalcolate): LastreCalcolate {
       const data = Object.values(this.selectedCellSections);
       const singles = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored);
 
-      const lastre25x50singles = singles.filter((x) => x.height == 50);
-      lastre25x50singles.forEach((x) => {
+      const blocks25x50singles = singles.filter((x) => x.height == 50);
+      const blocks25x75singles = singles.filter((x) => x.height == 75);
+      const blocks25x100singles = singles.filter((x) => x.height == 100);
+    
+      blocks25x50singles.forEach((x) => {
         res.L25x50 += 4;
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
-        let topCellSectionId = "";
-        let rightCellSectionId = "";
-        let bottomCellSectionId = "";
-        let leftCellSectionId = "";
-        if(currentCellCoordinates.section == 1) {
-          topCellSectionId = this.getCellSectionId(currentCellCoordinates.row - 1, currentCellCoordinates.column, 3);
-          rightCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column, 2);
-          bottomCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column, 3);
-          leftCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column - 1, 2);
-        } else if(currentCellCoordinates.section == 2) {
-          topCellSectionId = this.getCellSectionId(currentCellCoordinates.row - 1, currentCellCoordinates.column, 4);
-          rightCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column + 1, 1);
-          bottomCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column, 4);
-          leftCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column , 1);
-        } else if(currentCellCoordinates.section == 3) {
-          topCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column, 1);
-          rightCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column, 4);
-          bottomCellSectionId = this.getCellSectionId(currentCellCoordinates.row + 1, currentCellCoordinates.column, 1);
-          leftCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column - 1 , 4);
-        } else if(currentCellCoordinates.section == 4) {
-          topCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column, 2);
-          rightCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column + 1, 3);
-          bottomCellSectionId = this.getCellSectionId(currentCellCoordinates.row + 1, currentCellCoordinates.column, 2);
-          leftCellSectionId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column , 3);
-        }
+        const nearCells = this.getSingleBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
 
-        if(this.selectedCellSections[topCellSectionId]) {
+        if(this.selectedCellSections[nearCells.topCellSectionId]) {
           res.L25x50--;
         }
-        if(this.selectedCellSections[rightCellSectionId]) {
+        if(this.selectedCellSections[nearCells.rightCellSectionId]) {
           res.L25x50--;
         }
-        if(this.selectedCellSections[bottomCellSectionId]) {
+        if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
           res.L25x50--;
         }
-        if(this.selectedCellSections[leftCellSectionId]) {
+        if(this.selectedCellSections[nearCells.leftCellSectionId]) {
           res.L25x50--;
         }
       });
       
+      blocks25x75singles.forEach((x) => {
+        if(!this.singleSlabs) {
+          res.L25x50 += 4;
+          res.L25x25 += 4;
+        } else {
+          res.L25x75 += 4;
+        }
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getSingleBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(this.selectedCellSections[nearCells.topCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50--;
+            if(this.selectedCellSections[nearCells.topCellSectionId].height != 50) {
+              res.L25x25--;
+            }
+          } else {
+            res.L25x75--;
+            if(this.selectedCellSections[nearCells.topCellSectionId].height == 50) {
+              res.L25x25++;
+            }
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50--;
+            if(this.selectedCellSections[nearCells.rightCellSectionId].height != 50) {
+              res.L25x25--;
+            }
+          } else {
+            res.L25x75--;
+            if(this.selectedCellSections[nearCells.rightCellSectionId].height == 50) {
+              res.L25x25++;
+            }
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50--;
+            if(this.selectedCellSections[nearCells.bottomCellSectionId].height != 50) {
+              res.L25x25--;
+            }
+          } else {
+            res.L25x75--;
+            if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 50) {
+              res.L25x25++;
+            }
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50--;
+            if(this.selectedCellSections[nearCells.leftCellSectionId].height != 50) {
+              res.L25x25--;
+            }
+          } else {
+            res.L25x75--;
+            if(this.selectedCellSections[nearCells.leftCellSectionId].height == 50) {
+              res.L25x25++;
+            }
+          }
+        }
+      });
+     
+      blocks25x100singles.forEach((x) => {
+        if(!this.singleSlabs) {
+          res.L25x50 += 8;
+        } else {
+          res.L25x100 += 4;
+        }
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getSingleBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(this.selectedCellSections[nearCells.topCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50 -= 2;
+          } else {
+            res.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.topCellSectionId].height == 50) {
+            res.L25x50++;
+          } else if(this.selectedCellSections[nearCells.topCellSectionId].height == 75) {
+            res.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50 -= 2;
+          } else {
+            res.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.rightCellSectionId].height == 50) {
+            res.L25x50++;
+          } else if(this.selectedCellSections[nearCells.rightCellSectionId].height == 75) {
+            res.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50 -= 2;
+          } else {
+            res.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 50) {
+            res.L25x50++;
+          } else if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 75) {
+            res.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftCellSectionId]) {
+          if(!this.singleSlabs) {
+            res.L25x50 -= 2;
+          } else {
+            res.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.leftCellSectionId].height == 50) {
+            res.L25x50++;
+          } else if(this.selectedCellSections[nearCells.leftCellSectionId].height == 75) {
+            res.L25x25++;
+          }
+        }
+      });
+
       return res;
     },
 
