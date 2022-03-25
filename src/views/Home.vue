@@ -740,8 +740,13 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -756,7 +761,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
@@ -767,8 +776,13 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -783,7 +797,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
@@ -954,8 +972,13 @@ export default defineComponent({
         const nearCells = this.getHBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
         
         if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -970,7 +993,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
@@ -1005,8 +1032,13 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.bottomRightCellSectionId] || this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -1021,7 +1053,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.bottomRightCellSectionId] && this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
@@ -1216,8 +1252,13 @@ export default defineComponent({
         const nearCells = this.getSquareBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column);
 
         if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -1232,7 +1273,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
@@ -1242,9 +1287,15 @@ export default defineComponent({
             this.computeResult.L25x50++;
           }
         }
+
         if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -1259,7 +1310,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
@@ -1269,9 +1324,15 @@ export default defineComponent({
             this.computeResult.L25x50++;
           }
         }
+
         if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -1286,7 +1347,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
@@ -1296,9 +1361,16 @@ export default defineComponent({
             this.computeResult.L25x50++;
           }
         }
+
+        
         if(this.selectedCellSections[nearCells.bottomRightCellSectionId] || this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
-          this.computeResult.L50x50 -= 2;
-          this.computeResult.L25x50 += 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50 -= 2;
+            this.computeResult.L25x50 += 2;
+          } else {
+            this.computeResult.L50x100--;
+            this.computeResult.L25x100++;
+          }
           if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50) {
             this.computeResult.L25x50++;
           }
@@ -1313,7 +1385,11 @@ export default defineComponent({
           }
         }
         if(this.selectedCellSections[nearCells.bottomRightCellSectionId] && this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
-          this.computeResult.L25x50 -= 2;
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
           if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
             this.computeResult.L25x50 -= 2;
             this.computeResult.L50x50++;
