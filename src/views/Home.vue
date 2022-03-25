@@ -94,7 +94,7 @@ export default defineComponent({
       } as DrawPlan,
       drawSelection: "25x25_50" as string,
       selectedCellSections: {} as SelectedCellSections,
-      singleSlabs: true,
+      singleSlabs: false,
       computeResult: {
         B25x25: 0,
         B25x50: 0,
@@ -535,23 +535,191 @@ export default defineComponent({
       });
 
       blocksH75vBlocks.forEach((x) => {
-        this.computeResult.L25x25 += 2;
-        this.computeResult.L25x50 += 2;
-        this.computeResult.L50x50 += 2;
-        this.computeResult.L25x50 += 2;
+        if(!this.singleSlabs) {
+          this.computeResult.L25x25 += 2;
+          this.computeResult.L25x50 += 2;
+          this.computeResult.L50x50 += 2;
+          this.computeResult.L25x50 += 2;
+        } else {
+          this.computeResult.L50x75 += 2;
+          this.computeResult.L25x75 += 2;
+        }
 
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCells = this.getVBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
         
+        if(this.selectedCellSections[nearCells.topCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.topCellSectionId].height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
       });
 
       blocksH100vBlocks.forEach((x) => {
-        this.computeResult.L25x50 += 4;
-        this.computeResult.L50x50 += 4;
+        if(!this.singleSlabs) {
+          this.computeResult.L25x50 += 4;
+          this.computeResult.L50x50 += 4;
+        } else {
+          this.computeResult.L50x100 += 2;
+          this.computeResult.L25x100 += 2;
+        }
 
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCells = this.getVBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
         
+        if(this.selectedCellSections[nearCells.topCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.topCellSectionId].height == 50) {
+            this.computeResult.L25x50++;
+          } else if(this.selectedCellSections[nearCells.topCellSectionId].height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 50) {
+            this.computeResult.L25x50++;
+          } else if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
       });
     },
 
