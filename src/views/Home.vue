@@ -346,6 +346,87 @@ export default defineComponent({
       };
     },
 
+    getSquareBlockNearCells(row: number, column: number): {
+      topLeftCellSectionId: string;
+      topRightCellSectionId: string;
+      rightTopCellSectionId: string;
+      rightBottomCellSectionId: string;
+      bottomLeftCellSectionId: string;
+      bottomRightCellSectionId: string;
+      leftTopCellSectionId: string;
+      leftBottomCellSectionId: string;
+    } {
+      let topLeftCellSectionId = "";
+      let topRightCellSectionId = "";
+      let rightTopCellSectionId = "";
+      let rightBottomCellSectionId = "";
+      let bottomLeftCellSectionId = "";
+      let bottomRightCellSectionId = "";
+      let leftTopCellSectionId = "";
+      let leftBottomCellSectionId = "";
+
+      topLeftCellSectionId = this.getCellSectionId(row - 1, column, 3);
+      topRightCellSectionId = this.getCellSectionId(row - 1, column, 4);
+      rightTopCellSectionId = this.getCellSectionId(row, column + 1, 1);
+      rightBottomCellSectionId = this.getCellSectionId(row, column + 1, 3);
+      bottomLeftCellSectionId = this.getCellSectionId(row + 1, column, 1);
+      bottomRightCellSectionId = this.getCellSectionId(row + 1, column, 2);
+      leftTopCellSectionId = this.getCellSectionId(row, column - 1, 2);
+      leftBottomCellSectionId = this.getCellSectionId(row, column - 1, 4);
+
+      return {
+        topLeftCellSectionId,
+        topRightCellSectionId,
+        rightTopCellSectionId,
+        rightBottomCellSectionId,
+        bottomLeftCellSectionId,
+        bottomRightCellSectionId,
+        leftTopCellSectionId,
+        leftBottomCellSectionId
+      };
+    },
+
+    getHBlockNearCells(row: number, column: number, section: number): {
+      topLeftCellSectionId: string;
+      topRightCellSectionId: string;
+      rightCellSectionId: string;
+      bottomLeftCellSectionId: string;
+      bottomRightCellSectionId: string;
+      leftCellSectionId: string;
+    } {
+      let topLeftCellSectionId = "";
+      let topRightCellSectionId = "";
+      let rightCellSectionId = "";
+      let bottomLeftCellSectionId = "";
+      let bottomRightCellSectionId = "";
+      let leftCellSectionId = "";
+
+      if(section == 1) {
+        topLeftCellSectionId = this.getCellSectionId(row - 1, column, 3);
+        topRightCellSectionId = this.getCellSectionId(row - 1, column, 4);
+        rightCellSectionId = this.getCellSectionId(row, column + 1, 1);
+        bottomLeftCellSectionId = this.getCellSectionId(row, column, 3);
+        bottomRightCellSectionId = this.getCellSectionId(row, column, 4);
+        leftCellSectionId = this.getCellSectionId(row, column - 1, 2);
+      } else if(section == 3) {
+        topLeftCellSectionId = this.getCellSectionId(row, column, 1);
+        topRightCellSectionId = this.getCellSectionId(row, column, 2);
+        rightCellSectionId = this.getCellSectionId(row, column + 1, 3);
+        bottomLeftCellSectionId = this.getCellSectionId(row + 1, column, 1);
+        bottomRightCellSectionId = this.getCellSectionId(row + 1, column, 2);
+        leftCellSectionId = this.getCellSectionId(row, column - 1, 4);
+      }
+
+      return {
+        topLeftCellSectionId,
+        topRightCellSectionId,
+        rightCellSectionId,
+        bottomLeftCellSectionId,
+        bottomRightCellSectionId,
+        leftCellSectionId
+      };
+    },
+
     getLastreSingle() {
       const data = Object.values(this.selectedCellSections);
       const singles = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored);
@@ -724,16 +805,525 @@ export default defineComponent({
     },
 
     getLastreHBlock() {
-      //
+      const data = Object.values(this.selectedCellSections);
+      const hBlocks = data.filter((x) => x.hBlock);
+
+      const blocksH50hBlocks = hBlocks.filter((x) => x.height == 50);
+      const blocksH75hBlocks = hBlocks.filter((x) => x.height == 75);
+      const blocksH100hBlocks = hBlocks.filter((x) => x.height == 100);
+
+      blocksH50hBlocks.forEach((x) => {
+        this.computeResult.L25x50 += 2;
+        this.computeResult.L50x50 += 2;
+
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getHBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.rightCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.rightCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.bottomLeftCellSectionId] || this.selectedCellSections[nearCells.bottomRightCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.bottomLeftCellSectionId] && this.selectedCellSections[nearCells.bottomRightCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+      });
+
+      blocksH75hBlocks.forEach((x) => {
+        if(!this.singleSlabs) {
+          this.computeResult.L25x25 += 2;
+          this.computeResult.L25x50 += 2;
+          this.computeResult.L50x50 += 2;
+          this.computeResult.L25x50 += 2;
+        } else {
+          this.computeResult.L50x75 += 2;
+          this.computeResult.L25x75 += 2;
+        }
+
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getHBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+        
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.rightCellSectionId].height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.leftCellSectionId].height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] || this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] && this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+      });
+
+      blocksH100hBlocks.forEach((x) => {
+        if(!this.singleSlabs) {
+          this.computeResult.L25x50 += 4;
+          this.computeResult.L50x50 += 4;
+        } else {
+          this.computeResult.L50x100 += 2;
+          this.computeResult.L25x100 += 2;
+        }
+
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getHBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+        
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.rightCellSectionId].height == 50) {
+            this.computeResult.L25x50++;
+          } else if(this.selectedCellSections[nearCells.rightCellSectionId].height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50 -= 2;
+          } else {
+            this.computeResult.L25x100--;
+          }
+          if(this.selectedCellSections[nearCells.leftCellSectionId].height == 50) {
+            this.computeResult.L25x50++;
+          } else if(this.selectedCellSections[nearCells.leftCellSectionId].height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] || this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] && this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+      });
     },
 
     getLastreSquare() {
-      //
+      const data = Object.values(this.selectedCellSections);
+      const squareBlocks = data.filter((x) => x.isSquare);
+
+      const blocksH50squares = squareBlocks.filter((x) => x.height == 50);
+      const blocksH75squares = squareBlocks.filter((x) => x.height == 75);
+      const blocksH100squares = squareBlocks.filter((x) => x.height == 100);
+
+      blocksH50squares.forEach((x) => {
+        this.computeResult.L50x50 += 4;
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getSquareBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column);
+
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.bottomLeftCellSectionId] || this.selectedCellSections[nearCells.bottomRightCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.bottomLeftCellSectionId] && this.selectedCellSections[nearCells.bottomRightCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+      });
+
+      blocksH75squares.forEach((x) => {
+        if(!this.singleSlabs) {
+          this.computeResult.L50x50 += 4;
+          this.computeResult.L25x50 += 4;
+        } else {
+          this.computeResult.L50x75 += 4;
+        }
+
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getSquareBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column);
+
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] || this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L50x50--;
+            this.computeResult.L25x50--;
+            this.computeResult.L25x50++;
+            this.computeResult.L25x25++;
+          } else {
+            this.computeResult.L50x75--;
+            this.computeResult.L25x75++;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] && this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          if(!this.singleSlabs) {
+            this.computeResult.L25x50--;
+            this.computeResult.L25x25--;
+          } else {
+            this.computeResult.L25x75--;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x25 -=2;
+            this.computeResult.L25x50++;
+          }
+        }
+      });
+
+      blocksH100squares.forEach((x) => {
+        if(!this.singleSlabs) {
+        this.computeResult.L50x50 += 8;
+        } else {
+        this.computeResult.L50x100 += 4;
+        }
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getSquareBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column);
+
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] || this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.topRightCellSectionId] && this.selectedCellSections[nearCells.topLeftCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.topRightCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.topLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.rightTopCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.rightBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.leftTopCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.leftBottomCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] || this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          this.computeResult.L50x50 -= 2;
+          this.computeResult.L25x50 += 2;
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50++;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+          if(this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25++;
+          }
+        }
+        if(this.selectedCellSections[nearCells.bottomRightCellSectionId] && this.selectedCellSections[nearCells.bottomLeftCellSectionId]) {
+          this.computeResult.L25x50 -= 2;
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 50 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 50) {
+            this.computeResult.L25x50 -= 2;
+            this.computeResult.L50x50++;
+          }
+          if(this.selectedCellSections[nearCells.bottomRightCellSectionId]?.height == 75 && this.selectedCellSections[nearCells.bottomLeftCellSectionId]?.height == 75) {
+            this.computeResult.L25x25 -= 2;
+            this.computeResult.L25x50++;
+          }
+        }
+      });
     },
 
     getLastre() {
       /*
-      const hBlocks = data.filter((x) => x.hBlock);
       const squares = data.filter((x) => x.isSquare);
       */
 
