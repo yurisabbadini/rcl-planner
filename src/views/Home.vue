@@ -77,6 +77,27 @@
         </tbody>
       </table>
     </div>
+    <br/>
+    <div>
+      <table style="font-size:11px;margin-top: 15px;">
+        <thead>
+          <tr>
+            <th style="padding: 0 15px;">Lineari</th>
+            <th style="padding: 0 15px;">Interni</th>
+            <th style="padding: 0 15px;">Esterni</th>
+            <th style="padding: 0 15px;">Centrali</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ computeResult.linearPoints.length }}</td>
+            <td>{{ computeResult.internalPoints.length }}</td>
+            <td>{{ computeResult.externalPoints.length }}</td>
+            <td>{{ computeResult.centralPoints.length }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -109,7 +130,11 @@ export default defineComponent({
         L25x100: 0,
         L50x50: 0,
         L50x75: 0,
-        L50x100: 0
+        L50x100: 0,
+        linearPoints: [],
+        internalPoints: [],
+        externalPoints: [],
+        centralPoints: []
       } as ComputeResult
     }
   },
@@ -122,7 +147,6 @@ export default defineComponent({
     }
   },
   methods: {
-    //Blocks finder functions
     initBlock(key: string) {
       if(this.selectedCellSections[key]) {
         this.selectedCellSections[key].ignored = false;
@@ -131,6 +155,7 @@ export default defineComponent({
         this.selectedCellSections[key].isSquare = false;
       }
     },
+    
     checkIfSquare(key: string): void {
       const cellSectionCoordinates = this.parseCellSectionId(key);
       const section1Id = this.getCellSectionId(cellSectionCoordinates.row, cellSectionCoordinates.column, 1); 
@@ -172,6 +197,7 @@ export default defineComponent({
         }
       }
     },
+
     checkIfHBlock(key: string): void {
       const cellSectionCoordinates = this.parseCellSectionId(key);
       const section1Id = this.getCellSectionId(cellSectionCoordinates.row, cellSectionCoordinates.column, 1); 
@@ -210,6 +236,7 @@ export default defineComponent({
         }
       }
     },
+
     checkIfVBlock(key: string): void {
       const cellSectionCoordinates = this.parseCellSectionId(key);
       const section1Id = this.getCellSectionId(cellSectionCoordinates.row, cellSectionCoordinates.column, 1); 
@@ -252,24 +279,6 @@ export default defineComponent({
       }
     },
 
-    //points functions
-    getLineari(): void {
-      return;
-    },
-
-    getAngoliInterni(): void {
-      return;
-    },
-
-    getAngoliEsterni(): void {
-      return;
-    },
-
-    getAngoliCentrali(): void {
-      return;
-    },
-
-    //lastre
     getSingleBlockNearCells(row: number, column: number, section: number): {
       topCellSectionId: string;
       rightCellSectionId: string;
@@ -429,6 +438,75 @@ export default defineComponent({
         bottomRightCellSectionId,
         leftCellSectionId
       };
+    },
+
+    getCellSectionNearCells(row: number, column: number, section: number): {
+      topCellSectionId: string;
+      topLeftCellSectionId: string;
+      topRightCellSectionId: string;
+      rightCellSectionId: string;
+      leftCellSectionId: string;
+      bottomCellSectionId: string;
+      bottomLeftCellSectionId: string;
+      bottomRightCellSectionId: string;
+    } {
+      let topCellSectionId = "";
+      let topLeftCellSectionId = "";
+      let topRightCellSectionId = "";
+      let rightCellSectionId = "";
+      let leftCellSectionId = "";
+      let bottomCellSectionId = "";
+      let bottomLeftCellSectionId = "";
+      let bottomRightCellSectionId = "";
+
+      if(section == 1) {
+        topCellSectionId = this.getCellSectionId(row - 1, column, 3);
+        topLeftCellSectionId = this.getCellSectionId(row - 1, column - 1, 4);
+        topRightCellSectionId = this.getCellSectionId(row - 1, column, 4);
+        rightCellSectionId = this.getCellSectionId(row, column, 2);
+        leftCellSectionId = this.getCellSectionId(row, column - 1, 2);
+        bottomCellSectionId = this.getCellSectionId(row, column, 3);
+        bottomLeftCellSectionId = this.getCellSectionId(row, column - 1, 4);
+        bottomRightCellSectionId = this.getCellSectionId(row, column, 4);
+      } else if(section == 2) {
+        topCellSectionId = this.getCellSectionId(row - 1, column, 4);
+        topLeftCellSectionId = this.getCellSectionId(row - 1, column, 3);
+        topRightCellSectionId = this.getCellSectionId(row + 1, column + 1, 3);
+        rightCellSectionId = this.getCellSectionId(row, column + 1, 1);
+        leftCellSectionId = this.getCellSectionId(row, column, 1);
+        bottomCellSectionId = this.getCellSectionId(row, column, 4);
+        bottomLeftCellSectionId = this.getCellSectionId(row, column, 2);
+        bottomRightCellSectionId = this.getCellSectionId(row, column + 1, 3);
+      } else if(section == 3) {
+        topCellSectionId = this.getCellSectionId(row, column, 1);
+        topLeftCellSectionId = this.getCellSectionId(row, column - 1, 2);
+        topRightCellSectionId = this.getCellSectionId(row, column, 2);
+        rightCellSectionId = this.getCellSectionId(row, column, 4);
+        leftCellSectionId = this.getCellSectionId(row, column - 1, 4);
+        bottomCellSectionId = this.getCellSectionId(row + 1, column, 1);
+        bottomLeftCellSectionId = this.getCellSectionId(row + 1, column - 1, 2);
+        bottomRightCellSectionId = this.getCellSectionId(row + 1, column, 2);
+      } else if(section == 4) {
+        topCellSectionId = this.getCellSectionId(row, column, 2);
+        topLeftCellSectionId = this.getCellSectionId(row, column, 1);
+        topRightCellSectionId = this.getCellSectionId(row, column + 1, 1);
+        rightCellSectionId = this.getCellSectionId(row, column + 1, 3);
+        leftCellSectionId = this.getCellSectionId(row, column - 1, 4);
+        bottomCellSectionId = this.getCellSectionId(row + 1, column, 2);
+        bottomLeftCellSectionId = this.getCellSectionId(row + 1, column, 1);
+        bottomRightCellSectionId = this.getCellSectionId(row + 1, column + 1, 1);
+      }
+
+      return {
+        topCellSectionId,
+        topLeftCellSectionId,
+        topRightCellSectionId,
+        rightCellSectionId,
+        leftCellSectionId,
+        bottomCellSectionId,
+        bottomLeftCellSectionId,
+        bottomRightCellSectionId
+      }
     },
 
     getLastreSingle() {
@@ -1403,22 +1481,199 @@ export default defineComponent({
     },
 
     getLastre() {
-      /*
-      const squares = data.filter((x) => x.isSquare);
-      */
-
       this.getLastreSingle();
       this.getLastreVBlock();
       this.getLastreHBlock();
       this.getLastreSquare();
     },
 
-    //basamenti
     getBasamenti() {
       const data = Object.values(this.selectedCellSections);
       this.computeResult.B25x50 = data.filter((x) => x.hBlock).length + data.filter((x) => x.vBlock).length;
       this.computeResult.B50x50 = data.filter((x) => x.isSquare).length;
       this.computeResult.B25x25 = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored).length;
+    },
+
+    getLinearPoints() {
+      const data = Object.values(this.selectedCellSections);
+
+      data.forEach((x) => {
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(
+          this.selectedCellSections[nearCells.topCellSectionId] &&
+          !this.selectedCellSections[nearCells.leftCellSectionId] && 
+          !this.selectedCellSections[nearCells.topLeftCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "top-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-left"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.topCellSectionId && p.position == "bottom-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.topCellSectionId,
+              position: "bottom-left"
+            });
+          }
+        }
+
+        if(
+          this.selectedCellSections[nearCells.topCellSectionId] &&
+          !this.selectedCellSections[nearCells.rightCellSectionId] && 
+          !this.selectedCellSections[nearCells.topRightCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "top-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-right"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.topCellSectionId && p.position == "bottom-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.topCellSectionId,
+              position: "bottom-right"
+            });
+          }
+        }
+
+        if(
+          this.selectedCellSections[nearCells.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCells.leftCellSectionId] && 
+          !this.selectedCellSections[nearCells.bottomLeftCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "bottom-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-left"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.bottomCellSectionId && p.position == "top-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.bottomCellSectionId,
+              position: "top-left"
+            });
+          }
+        }
+
+        if(
+          this.selectedCellSections[nearCells.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCells.rightCellSectionId] && 
+          !this.selectedCellSections[nearCells.bottomRightCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "bottom-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-right"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.bottomCellSectionId && p.position == "top-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.bottomCellSectionId,
+              position: "top-right"
+            });
+          }
+        }
+
+        if(
+          this.selectedCellSections[nearCells.rightCellSectionId] &&
+          !this.selectedCellSections[nearCells.topCellSectionId] && 
+          !this.selectedCellSections[nearCells.topRightCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "top-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-right"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.rightCellSectionId && p.position == "top-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.rightCellSectionId,
+              position: "top-left"
+            });
+          }
+        }
+
+        if(
+          this.selectedCellSections[nearCells.rightCellSectionId] &&
+          !this.selectedCellSections[nearCells.bottomCellSectionId] && 
+          !this.selectedCellSections[nearCells.bottomRightCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "bottom-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-right"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.rightCellSectionId && p.position == "bottom-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.rightCellSectionId,
+              position: "bottom-left"
+            });
+          }
+        }
+
+        if(
+          this.selectedCellSections[nearCells.leftCellSectionId] &&
+          !this.selectedCellSections[nearCells.topCellSectionId] && 
+          !this.selectedCellSections[nearCells.topLeftCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "top-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-left"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.leftCellSectionId && p.position == "top-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.leftCellSectionId,
+              position: "top-right"
+            });
+          }
+        }
+
+        if(
+          this.selectedCellSections[nearCells.leftCellSectionId] &&
+          !this.selectedCellSections[nearCells.bottomCellSectionId] && 
+          !this.selectedCellSections[nearCells.bottomLeftCellSectionId]
+        ) {
+          let existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == x.cellSectionId && p.position == "bottom-left");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-left"
+            });
+          }
+          existingPoint = this.computeResult.linearPoints.find((p) => p.cellSectionId == nearCells.leftCellSectionId && p.position == "bottom-right");
+          if(!existingPoint) {
+            this.computeResult.linearPoints.push({
+              cellSectionId: nearCells.leftCellSectionId,
+              position: "bottom-right"
+            });
+          }
+        }
+      });
+
+    },
+
+    getPoints() {
+      this.getLinearPoints();
     },
 
     getResults() {
@@ -1432,10 +1687,15 @@ export default defineComponent({
         L25x100: 0,
         L50x50: 0,
         L50x75: 0,
-        L50x100: 0
+        L50x100: 0,
+        linearPoints: [],
+        internalPoints: [],
+        externalPoints: [],
+        centralPoints: [],
       };
       this.getBasamenti();
       this.getLastre();
+      this.getPoints();
     },
 
     //common functions
