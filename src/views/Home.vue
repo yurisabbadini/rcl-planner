@@ -37,6 +37,9 @@
       <label for="50x50_50">50x50 H75</label>
       <input type="radio" id="50x50_100" name="draw-selection" value="50x50_100" v-model="drawSelection">
       <label for="50x50_100">50x50 H100</label>
+      <br/>
+      <br/>
+      <button @click="getResults">CALCOLA</button>
     </div>
     <div>
       <table style="font-size:11px;margin-top: 15px;">
@@ -44,13 +47,11 @@
           <tr>
             <th style="padding: 0 15px;">Bas 25x25</th>
             <th style="padding: 0 15px;">Bas 25x50</th>
-            <th style="padding: 0 15px;">Bas 50x25</th>
             <th style="padding: 0 15px;">Bas 50x50</th>
             <th style="padding: 0 15px;">Lastre 25x25</th>
             <th style="padding: 0 15px;">Lastre 25x50</th>
             <th style="padding: 0 15px;">Lastre 25x75</th>
             <th style="padding: 0 15px;">Lastre 25x100</th>
-            <th style="padding: 0 15px;">Lastre 50x25</th>
             <th style="padding: 0 15px;">Lastre 50x50</th>
             <th style="padding: 0 15px;">Lastre 50x75</th>
             <th style="padding: 0 15px;">Lastre 50x100</th>
@@ -58,18 +59,16 @@
         </thead>
         <tbody>
           <tr>
-            <td>{{ getBasamenti("25x25") }}</td>
-            <td>{{ getBasamenti("25x50") }}</td>
-            <td>{{ getBasamenti("50x25") }}</td>
-            <td>{{ getBasamenti("50x50") }}</td>
-            <td>{{ getLastre().L25x25 }}</td>
-            <td>{{ getLastre().L25x50 }}</td>
-            <td>{{ getLastre().L25x75 }}</td>
-            <td>{{ getLastre().L25x100 }}</td>
-            <td>{{ getLastre().L50x25 }}</td>
-            <td>{{ getLastre().L50x50 }}</td>
-            <td>{{ getLastre().L50x75 }}</td>
-            <td>{{ getLastre().L50x100 }}</td>
+            <td>{{ computeResult.B25x25 }}</td>
+            <td>{{ computeResult.B25x50 }}</td>
+            <td>{{ computeResult.B50x50 }}</td>
+            <td>{{ computeResult.L25x25 }}</td>
+            <td>{{ computeResult.L25x50 }}</td>
+            <td>{{ computeResult.L25x75 }}</td>
+            <td>{{ computeResult.L25x100 }}</td>
+            <td>{{ computeResult.L50x50 }}</td>
+            <td>{{ computeResult.L50x75 }}</td>
+            <td>{{ computeResult.L50x100 }}</td>
           </tr>
         </tbody>
       </table>
@@ -80,7 +79,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Cell from "../components/Cell.vue";
-import { DrawPlan, SelectedCellSections, ToggleParams, CellSectionCoordinates, LastreCalcolate } from "../appTypes";
+import { DrawPlan, SelectedCellSections, ToggleParams, CellSectionCoordinates, ComputeResult } from "../appTypes";
 
 export default defineComponent({
   name: "Home",
@@ -95,7 +94,19 @@ export default defineComponent({
       } as DrawPlan,
       drawSelection: "25x25_50" as string,
       selectedCellSections: {} as SelectedCellSections,
-      singleSlabs: true
+      singleSlabs: true,
+      computeResult: {
+        B25x25: 0,
+        B25x50: 0,
+        B50x50: 0,
+        L25x25: 0,
+        L25x50: 0,
+        L25x75: 0,
+        L25x100: 0,
+        L50x50: 0,
+        L50x75: 0,
+        L50x100: 0
+      } as ComputeResult
     }
   },
   computed: {
@@ -294,7 +305,48 @@ export default defineComponent({
         };
     },
 
-    getLastreSingle(res: LastreCalcolate): LastreCalcolate {
+    getVBlockNearCells(row: number, column: number, section: number): {
+      topCellSectionId: string;
+      rightTopCellSectionId: string;
+      rightBottomCellSectionId: string;
+      bottomCellSectionId: string;
+      leftTopCellSectionId: string;
+      leftBottomCellSectionId: string;
+    } {
+      let topCellSectionId = "";
+      let rightTopCellSectionId = "";
+      let rightBottomCellSectionId = "";
+      let bottomCellSectionId = "";
+      let leftTopCellSectionId = "";
+      let leftBottomCellSectionId = "";
+
+      if(section == 1) {
+        topCellSectionId = this.getCellSectionId(row - 1, column, 3);
+        rightTopCellSectionId = this.getCellSectionId(row, column, 2);
+        rightBottomCellSectionId = this.getCellSectionId(row, column, 4);
+        bottomCellSectionId = this.getCellSectionId(row + 1, column, 1);
+        leftTopCellSectionId = this.getCellSectionId(row, column - 1, 2);
+        leftBottomCellSectionId = this.getCellSectionId(row, column - 1, 4);
+      } else if(section == 2) {
+        topCellSectionId = this.getCellSectionId(row - 1, column, 4);
+        rightTopCellSectionId = this.getCellSectionId(row, column + 1, 1);
+        rightBottomCellSectionId = this.getCellSectionId(row, column + 1, 3);
+        bottomCellSectionId = this.getCellSectionId(row + 1, column, 2);
+        leftTopCellSectionId = this.getCellSectionId(row, column, 1);
+        leftBottomCellSectionId = this.getCellSectionId(row, column, 3);
+      }
+
+      return {
+        topCellSectionId,
+        rightTopCellSectionId,
+        rightBottomCellSectionId,
+        bottomCellSectionId,
+        leftTopCellSectionId,
+        leftBottomCellSectionId
+      };
+    },
+
+    getLastreSingle() {
       const data = Object.values(this.selectedCellSections);
       const singles = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored);
 
@@ -303,83 +355,83 @@ export default defineComponent({
       const blocks25x100singles = singles.filter((x) => x.height == 100);
     
       blocks25x50singles.forEach((x) => {
-        res.L25x50 += 4;
+        this.computeResult.L25x50 += 4;
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCells = this.getSingleBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
 
         if(this.selectedCellSections[nearCells.topCellSectionId]) {
-          res.L25x50--;
+          this.computeResult.L25x50--;
         }
         if(this.selectedCellSections[nearCells.rightCellSectionId]) {
-          res.L25x50--;
+          this.computeResult.L25x50--;
         }
         if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
-          res.L25x50--;
+          this.computeResult.L25x50--;
         }
         if(this.selectedCellSections[nearCells.leftCellSectionId]) {
-          res.L25x50--;
+          this.computeResult.L25x50--;
         }
       });
       
       blocks25x75singles.forEach((x) => {
         if(!this.singleSlabs) {
-          res.L25x50 += 4;
-          res.L25x25 += 4;
+          this.computeResult.L25x50 += 4;
+          this.computeResult.L25x25 += 4;
         } else {
-          res.L25x75 += 4;
+          this.computeResult.L25x75 += 4;
         }
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCells = this.getSingleBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
 
         if(this.selectedCellSections[nearCells.topCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50--;
+            this.computeResult.L25x50--;
             if(this.selectedCellSections[nearCells.topCellSectionId].height != 50) {
-              res.L25x25--;
+              this.computeResult.L25x25--;
             }
           } else {
-            res.L25x75--;
+            this.computeResult.L25x75--;
             if(this.selectedCellSections[nearCells.topCellSectionId].height == 50) {
-              res.L25x25++;
+              this.computeResult.L25x25++;
             }
           }
         }
         if(this.selectedCellSections[nearCells.rightCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50--;
+            this.computeResult.L25x50--;
             if(this.selectedCellSections[nearCells.rightCellSectionId].height != 50) {
-              res.L25x25--;
+              this.computeResult.L25x25--;
             }
           } else {
-            res.L25x75--;
+            this.computeResult.L25x75--;
             if(this.selectedCellSections[nearCells.rightCellSectionId].height == 50) {
-              res.L25x25++;
+              this.computeResult.L25x25++;
             }
           }
         }
         if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50--;
+            this.computeResult.L25x50--;
             if(this.selectedCellSections[nearCells.bottomCellSectionId].height != 50) {
-              res.L25x25--;
+              this.computeResult.L25x25--;
             }
           } else {
-            res.L25x75--;
+            this.computeResult.L25x75--;
             if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 50) {
-              res.L25x25++;
+              this.computeResult.L25x25++;
             }
           }
         }
         if(this.selectedCellSections[nearCells.leftCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50--;
+            this.computeResult.L25x50--;
             if(this.selectedCellSections[nearCells.leftCellSectionId].height != 50) {
-              res.L25x25--;
+              this.computeResult.L25x25--;
             }
           } else {
-            res.L25x75--;
+            this.computeResult.L25x75--;
             if(this.selectedCellSections[nearCells.leftCellSectionId].height == 50) {
-              res.L25x25++;
+              this.computeResult.L25x25++;
             }
           }
         }
@@ -387,121 +439,165 @@ export default defineComponent({
      
       blocks25x100singles.forEach((x) => {
         if(!this.singleSlabs) {
-          res.L25x50 += 8;
+          this.computeResult.L25x50 += 8;
         } else {
-          res.L25x100 += 4;
+          this.computeResult.L25x100 += 4;
         }
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCells = this.getSingleBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
 
         if(this.selectedCellSections[nearCells.topCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50 -= 2;
+            this.computeResult.L25x50 -= 2;
           } else {
-            res.L25x100--;
+            this.computeResult.L25x100--;
           }
           if(this.selectedCellSections[nearCells.topCellSectionId].height == 50) {
-            res.L25x50++;
+            this.computeResult.L25x50++;
           } else if(this.selectedCellSections[nearCells.topCellSectionId].height == 75) {
-            res.L25x25++;
+            this.computeResult.L25x25++;
           }
         }
         if(this.selectedCellSections[nearCells.rightCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50 -= 2;
+            this.computeResult.L25x50 -= 2;
           } else {
-            res.L25x100--;
+            this.computeResult.L25x100--;
           }
           if(this.selectedCellSections[nearCells.rightCellSectionId].height == 50) {
-            res.L25x50++;
+            this.computeResult.L25x50++;
           } else if(this.selectedCellSections[nearCells.rightCellSectionId].height == 75) {
-            res.L25x25++;
+            this.computeResult.L25x25++;
           }
         }
         if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50 -= 2;
+            this.computeResult.L25x50 -= 2;
           } else {
-            res.L25x100--;
+            this.computeResult.L25x100--;
           }
           if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 50) {
-            res.L25x50++;
+            this.computeResult.L25x50++;
           } else if(this.selectedCellSections[nearCells.bottomCellSectionId].height == 75) {
-            res.L25x25++;
+            this.computeResult.L25x25++;
           }
         }
         if(this.selectedCellSections[nearCells.leftCellSectionId]) {
           if(!this.singleSlabs) {
-            res.L25x50 -= 2;
+            this.computeResult.L25x50 -= 2;
           } else {
-            res.L25x100--;
+            this.computeResult.L25x100--;
           }
           if(this.selectedCellSections[nearCells.leftCellSectionId].height == 50) {
-            res.L25x50++;
+            this.computeResult.L25x50++;
           } else if(this.selectedCellSections[nearCells.leftCellSectionId].height == 75) {
-            res.L25x25++;
+            this.computeResult.L25x25++;
           }
         }
       });
-
-      return res;
     },
 
-    getLastreVBlock(res: LastreCalcolate): LastreCalcolate {
-      return res;
-    },
-
-    getLastreHBlock(res: LastreCalcolate): LastreCalcolate {
-      return res;
-    },
-
-    getLastreSquare(res: LastreCalcolate): LastreCalcolate {
-      return res;
-    },
-
-    getLastre(): LastreCalcolate {
-      /*const data = Object.values(this.selectedCellSections);
-      const hBlocks = data.filter((x) => x.hBlock);
+    getLastreVBlock() {
+      const data = Object.values(this.selectedCellSections);
       const vBlocks = data.filter((x) => x.vBlock);
-      const squares = data.filter((x) => x.isSquare);
-      const singles = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored);*/
 
-      let res: LastreCalcolate = {
+      const blocksH50vBlocks = vBlocks.filter((x) => x.height == 50);
+      const blocksH75vBlocks = vBlocks.filter((x) => x.height == 75);
+      const blocksH100vBlocks = vBlocks.filter((x) => x.height == 100);
+
+      blocksH50vBlocks.forEach((x) => {
+        this.computeResult.L25x50 += 2;
+        this.computeResult.L50x50 += 2;
+
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getVBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(this.selectedCellSections[nearCells.topCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] || this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.rightTopCellSectionId] && this.selectedCellSections[nearCells.rightBottomCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] || this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L50x50--;
+          this.computeResult.L25x50++;
+        }
+        if(this.selectedCellSections[nearCells.leftTopCellSectionId] && this.selectedCellSections[nearCells.leftBottomCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+        if(this.selectedCellSections[nearCells.bottomCellSectionId]) {
+          this.computeResult.L25x50--;
+        }
+      });
+
+      blocksH75vBlocks.forEach((x) => {
+        this.computeResult.L25x25 += 2;
+        this.computeResult.L25x50 += 2;
+        this.computeResult.L50x50 += 2;
+        this.computeResult.L25x50 += 2;
+
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getVBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+        
+      });
+
+      blocksH100vBlocks.forEach((x) => {
+        this.computeResult.L25x50 += 4;
+        this.computeResult.L50x50 += 4;
+
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCells = this.getVBlockNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+        
+      });
+    },
+
+    getLastreHBlock() {
+      //
+    },
+
+    getLastreSquare() {
+      //
+    },
+
+    getLastre() {
+      /*
+      const hBlocks = data.filter((x) => x.hBlock);
+      const squares = data.filter((x) => x.isSquare);
+      */
+
+      this.getLastreSingle();
+      this.getLastreVBlock();
+      this.getLastreHBlock();
+      this.getLastreSquare();
+    },
+
+    //basamenti
+    getBasamenti() {
+      const data = Object.values(this.selectedCellSections);
+      this.computeResult.B25x50 = data.filter((x) => x.hBlock).length + data.filter((x) => x.vBlock).length;
+      this.computeResult.B50x50 = data.filter((x) => x.isSquare).length;
+      this.computeResult.B25x25 = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored).length;
+    },
+
+    getResults() {
+      this.computeResult = {
+        B25x25: 0,
+        B25x50: 0,
+        B50x50: 0,
         L25x25: 0,
         L25x50: 0,
         L25x75: 0,
         L25x100: 0,
-        L50x25: 0,
         L50x50: 0,
         L50x75: 0,
         L50x100: 0
       };
-
-      //single -> 25x50 * 4
-      res = this.getLastreSingle(res);
-      //vblock -> 25x50 * 2 + 50x50 * 2
-      res = this.getLastreVBlock(res);
-      //hblock -> 25x50 * 2 + 50x50 * 2
-      res = this.getLastreHBlock(res);
-      //square -> 50x50 * 4
-      res = this.getLastreSquare(res);
-      
-      return res;
-    },
-
-    //basamenti
-    getBasamenti(size: "25x25" | "25x50" | "50x25" | "50x50"): number {
-      const data = Object.values(this.selectedCellSections);
-      if(size == "25x50") {
-        return data.filter((x) => x.hBlock).length;
-      } else if(size == "50x25") {
-        return data.filter((x) => x.vBlock).length;
-      } else if(size == "50x50") {
-        return data.filter((x) => x.isSquare).length;
-      } else if(size == "25x25") {
-        return data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored).length;
-      }
-      return 0;
+      this.getBasamenti();
+      this.getLastre();
     },
 
     //common functions

@@ -30,12 +30,14 @@ export interface SelectedCellSections {
   }
 }
 
-export type LastreCalcolate = {
+export type ComputeResult = {
+  B25x25: number;
+  B25x50: number;
+  B50x50: number;
   L25x25: number;
   L25x50: number;
   L25x75: number;
   L25x100: number;
-  L50x25: number;
   L50x50: number;
   L50x75: number;
   L50x100: number;
