@@ -39,6 +39,10 @@
       <label for="50x50_100">50x50 H100</label>
       <br/>
       <br/>
+      <input type="checkbox" name="singleSlabs" v-model="singleSlabs">
+      <label for="singleSlabs">Lastre altezza unica</label>
+      <br/>
+      <br/>
       <button @click="getResults">CALCOLA</button>
     </div>
     <div>
