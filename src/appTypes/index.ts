@@ -30,6 +30,12 @@ export interface SelectedCellSections {
   }
 }
 
+export type Point = {
+  cellSectionId: string;
+  type: "linear" | "internal" | "external" | "central";
+  position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+}
+
 export type ComputeResult = {
   B25x25: number;
   B25x50: number;
@@ -41,8 +47,5 @@ export type ComputeResult = {
   L50x50: number;
   L50x75: number;
   L50x100: number;
-  linearPoints: number;
-  internalPoints: number;
-  externalPoints: number;
-  centralPoints: number;
+  points: Point[];
 }

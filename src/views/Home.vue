@@ -131,6 +131,7 @@ export default defineComponent({
         L50x50: 0,
         L50x75: 0,
         L50x100: 0,
+        points: [],
         linearPoints: 0,
         internalPoints: 0,
         externalPoints: 0,
@@ -1494,6 +1495,16 @@ export default defineComponent({
       this.computeResult.B25x25 = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored).length;
     },
 
+    getSameAngles(row: number, column: number, section: number, position: "top-left" | "top-right" | "bottom-left" | "bottom-right"): string[] {
+      const res: string[] = [];
+      //TODO: identificare i punti che hanno id diverso ma sono lo stesso
+      //top-left -> bottom-left_top;bottom-right_top-left;top-right_left
+      //bottom-left -> bottom-right_left;top-right_bottom-left;top-left_bottom
+      //bottom-right -> top-right_bottom;top-left_bottom-right;bottom-left_right
+      //top-right -> bottom-right_top;bottom-left_top-right;top-left_right
+      return res;
+    },
+
     getLinearPoints() {
       const data = Object.values(this.selectedCellSections);
       data.forEach((x) => {
@@ -1503,64 +1514,123 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.leftCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-left",
+              type: "linear"
+            });
+          }
         }
         if(this.selectedCellSections[nearCellCoordinates.topCellSectionId] && 
           !this.selectedCellSections[nearCellCoordinates.rightCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-right",
+              type: "linear"
+            });
+          }
         }
         if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
           !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-left",
+              type: "linear"
+            });
+          }
         }
         if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
           !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-left",
+              type: "linear"
+            });
+          }
         }
         if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
           !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-right",
+              type: "linear"
+            });
+          }
         }
         if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
           !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-right",
+              type: "linear"
+            });
+          }
         }
         if(this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] && 
           !this.selectedCellSections[nearCellCoordinates.leftCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-left",
+              type: "linear"
+            });
+          }
         }
         if(this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] && 
           !this.selectedCellSections[nearCellCoordinates.rightCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
         ) {
-          this.computeResult.linearPoints++;
+          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-right",
+              type: "linear"
+            });
+          }
         }
       });
-      this.computeResult.linearPoints /= 2;
     },
 
     getInternalPoints() {
-      //
+      const data = Object.values(this.selectedCellSections);
+      data.forEach((x) => {
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCellCoordinates = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+      });
     },
 
     getExternalPoints() {
-      //
+      const data = Object.values(this.selectedCellSections);
+      data.forEach((x) => {
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCellCoordinates = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+      });
     },
 
     getCentralPoints() {
-      //
+      const data = Object.values(this.selectedCellSections);
+      data.forEach((x) => {
+        const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCellCoordinates = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+      });
     },
 
     getPoints() {
@@ -1582,10 +1652,7 @@ export default defineComponent({
         L50x50: 0,
         L50x75: 0,
         L50x100: 0,
-        linearPoints: 0,
-        internalPoints: 0,
-        externalPoints: 0,
-        centralPoints: 0
+        points: []
       };
       this.getBasamenti();
       this.getLastre();
