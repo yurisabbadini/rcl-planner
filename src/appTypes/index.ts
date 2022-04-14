@@ -31,7 +31,6 @@ export interface SelectedCellSections {
 }
 
 export type Point = {
-  position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
   cellSectionId: string;
 }
 
