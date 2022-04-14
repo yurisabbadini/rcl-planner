@@ -90,10 +90,10 @@
         </thead>
         <tbody>
           <tr>
-            <td>{{ computeResult.linearPoints.length }}</td>
-            <td>{{ computeResult.internalPoints.length }}</td>
-            <td>{{ computeResult.externalPoints.length }}</td>
-            <td>{{ computeResult.centralPoints.length }}</td>
+            <td>{{ computeResult.linearPoints }}</td>
+            <td>{{ computeResult.internalPoints }}</td>
+            <td>{{ computeResult.externalPoints }}</td>
+            <td>{{ computeResult.centralPoints }}</td>
           </tr>
         </tbody>
       </table>
@@ -131,10 +131,10 @@ export default defineComponent({
         L50x50: 0,
         L50x75: 0,
         L50x100: 0,
-        linearPoints: [],
-        internalPoints: [],
-        externalPoints: [],
-        centralPoints: []
+        linearPoints: 0,
+        internalPoints: 0,
+        externalPoints: 0,
+        centralPoints: 0
       } as ComputeResult
     }
   },
@@ -471,11 +471,11 @@ export default defineComponent({
       } else if(section == 2) {
         topCellSectionId = this.getCellSectionId(row - 1, column, 4);
         topLeftCellSectionId = this.getCellSectionId(row - 1, column, 3);
-        topRightCellSectionId = this.getCellSectionId(row + 1, column + 1, 3);
+        topRightCellSectionId = this.getCellSectionId(row - 1, column + 1, 3);
         rightCellSectionId = this.getCellSectionId(row, column + 1, 1);
         leftCellSectionId = this.getCellSectionId(row, column, 1);
         bottomCellSectionId = this.getCellSectionId(row, column, 4);
-        bottomLeftCellSectionId = this.getCellSectionId(row, column, 2);
+        bottomLeftCellSectionId = this.getCellSectionId(row, column, 3);
         bottomRightCellSectionId = this.getCellSectionId(row, column + 1, 3);
       } else if(section == 3) {
         topCellSectionId = this.getCellSectionId(row, column, 1);
@@ -491,7 +491,7 @@ export default defineComponent({
         topLeftCellSectionId = this.getCellSectionId(row, column, 1);
         topRightCellSectionId = this.getCellSectionId(row, column + 1, 1);
         rightCellSectionId = this.getCellSectionId(row, column + 1, 3);
-        leftCellSectionId = this.getCellSectionId(row, column - 1, 4);
+        leftCellSectionId = this.getCellSectionId(row, column, 3);
         bottomCellSectionId = this.getCellSectionId(row + 1, column, 2);
         bottomLeftCellSectionId = this.getCellSectionId(row + 1, column, 1);
         bottomRightCellSectionId = this.getCellSectionId(row + 1, column + 1, 1);
@@ -1498,127 +1498,76 @@ export default defineComponent({
       const data = Object.values(this.selectedCellSections);
       data.forEach((x) => {
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
+        const nearCellCoordinates = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+        if(this.selectedCellSections[nearCellCoordinates.topCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.leftCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+        if(this.selectedCellSections[nearCellCoordinates.topCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.rightCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+        if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+        if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+        if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+        if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+        if(this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.leftCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+        if(this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.rightCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
+        ) {
+          this.computeResult.linearPoints++;
+        }
+      });
+      this.computeResult.linearPoints /= 2;
+    },
 
-        if(!x.ignored) {
-          if(x.vBlock) {
-            let topCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,3);
-            let topLeftCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column-1,4);
-            let topRightCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,4);
-            let leftTopCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column-1,2);
-            let rightTopCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,2);
-            let bottomCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column,1);
-            let bottomLeftCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column-1,2);
-            let bottomRightCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column,2);
-            let leftBottomCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column-1,4);
-            let rightBottomCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,4);
-            if(currentCellCoordinates.section == 2) {
-              topCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,4);
-              topLeftCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,3);
-              topRightCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column+1,3);
-              leftTopCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,1);
-              rightTopCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column+1,1);
-              bottomCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column,2);
-              bottomLeftCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column,1);
-              bottomRightCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column+1,1);
-              leftBottomCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,3);
-              rightBottomCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column+1,3);
-            }
-            if(this.selectedCellSections[topCellId] && 
-              !this.selectedCellSections[topLeftCellId] &&
-              !this.selectedCellSections[leftTopCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-            if(this.selectedCellSections[topCellId] && 
-              !this.selectedCellSections[topRightCellId] &&
-              !this.selectedCellSections[rightTopCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-            if(this.selectedCellSections[bottomCellId] && 
-              !this.selectedCellSections[bottomLeftCellId] &&
-              !this.selectedCellSections[leftBottomCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-            if(this.selectedCellSections[bottomCellId] && 
-              !this.selectedCellSections[bottomRightCellId] &&
-              !this.selectedCellSections[rightBottomCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-          }
-          if(x.hBlock) {
-            let leftCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,2);
-            let leftTopCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,3);
-            let leftBottomCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,3);
-            let topLeftCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column-1,4);
-            let bottomLeftCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column-1,4);
-            let rightCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column+1,1);
-            let rightTopCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,4);
-            let rightBottomCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,4);
-            let topRightCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column+1,3);
-            let bottomRightCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column+1,3);
-            if(currentCellCoordinates.section == 3) {
-              leftCellId = this.getCellSectionId(currentCellCoordinates.row-1, currentCellCoordinates.column,4);
-              leftTopCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,1);
-              leftBottomCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column,1);
-              topLeftCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column-1,2);
-              bottomLeftCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column-1,2);
-              rightCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column+1,3);
-              rightTopCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column,2);
-              rightBottomCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column,2);
-              topRightCellId = this.getCellSectionId(currentCellCoordinates.row, currentCellCoordinates.column+1,1);
-              bottomRightCellId = this.getCellSectionId(currentCellCoordinates.row+1, currentCellCoordinates.column+1,1);
-            }
-            if(this.selectedCellSections[leftCellId] && 
-              !this.selectedCellSections[topLeftCellId] &&
-              !this.selectedCellSections[leftTopCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-            if(this.selectedCellSections[leftCellId] && 
-              !this.selectedCellSections[leftBottomCellId] &&
-              !this.selectedCellSections[bottomLeftCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-            if(this.selectedCellSections[rightCellId] && 
-              !this.selectedCellSections[rightTopCellId] &&
-              !this.selectedCellSections[topRightCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-            if(this.selectedCellSections[rightCellId] && 
-              !this.selectedCellSections[rightBottomCellId] &&
-              !this.selectedCellSections[bottomRightCellId]
-            ) {
-              this.computeResult.linearPoints.push({
-                cellSectionId: x.cellSectionId
-              });
-            }
-          }
-          //if square
-          //if single
-        }});
+    getInternalPoints() {
+      //
+    },
+
+    getExternalPoints() {
+      //
+    },
+
+    getCentralPoints() {
+      //
     },
 
     getPoints() {
       this.getLinearPoints();
+      this.getInternalPoints();
+      this.getExternalPoints();
+      this.getCentralPoints();
     },
 
     getResults() {
@@ -1633,10 +1582,10 @@ export default defineComponent({
         L50x50: 0,
         L50x75: 0,
         L50x100: 0,
-        linearPoints: [],
-        internalPoints: [],
-        externalPoints: [],
-        centralPoints: [],
+        linearPoints: 0,
+        internalPoints: 0,
+        externalPoints: 0,
+        centralPoints: 0
       };
       this.getBasamenti();
       this.getLastre();
