@@ -1,103 +1,158 @@
 <template>
 <div>
-  <div style="display:grid;grid-template-columns: 60% 40%;">
-    <div>
-      <table class="plan" cellspacing="0">
-        <tr v-for="r of drawPlan.rows" :key="r">
-          <td class="cell-wrapper" v-for="c of drawPlan.columns" :key="c">
-            <Cell :row="r" :column="c" :cellId="`${r}_${c}`" :selectedCellSections="selectedCellSections" @toggle="toggle"/>
-          </td>
-        </tr>
-      </table>
+  <div class="q-pa-md">
+    <div class="row">
+      <div class="col">
+        <table class="plan" cellspacing="0">
+          <tr v-for="r of drawPlan.rows" :key="r">
+            <td class="cell-wrapper" v-for="c of drawPlan.columns" :key="c">
+              <Cell :row="r" :column="c" :cellId="`${r}_${c}`" :selectedCellSections="selectedCellSections" @toggle="toggle"/>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="col">
+        <input type="radio" id="25x25_50" name="draw-selection" value="25x25_50" v-model="drawSelection" checked>
+        <label for="25x25_50">25x25 H50</label>
+        <input type="radio" id="25x25_75" name="draw-selection" value="25x25_75" v-model="drawSelection">
+        <label for="25x25_50">25x25 H75</label>
+        <input type="radio" id="25x25_100" name="draw-selection" value="25x25_100" v-model="drawSelection">
+        <label for="25x25_100">25x25 H100</label>
+        <br/>
+        <input type="radio" id="25x50_50" name="draw-selection" value="25x50_50" v-model="drawSelection">
+        <label for="25x50_50">25x50 H50</label>
+        <input type="radio" id="25x50_75" name="draw-selection" value="25x50_75" v-model="drawSelection">
+        <label for="25x50_50">25x50 H75</label>
+        <input type="radio" id="25x50_100" name="draw-selection" value="25x50_100" v-model="drawSelection">
+        <label for="25x50_100">25x50 H100</label>
+        <br/>
+        <input type="radio" id="50x25_50" name="draw-selection" value="50x25_50" v-model="drawSelection">
+        <label for="50x25_50">50x25 H50</label>
+        <input type="radio" id="50x25_75" name="draw-selection" value="50x25_75" v-model="drawSelection">
+        <label for="50x25_50">50x25 H75</label>
+        <input type="radio" id="50x25_100" name="draw-selection" value="50x25_100" v-model="drawSelection">
+        <label for="50x25_100">50x25 H100</label>
+        <br/>
+        <input type="radio" id="50x50_50" name="draw-selection" value="50x50_50" v-model="drawSelection">
+        <label for="50x50_50">50x50 H50</label>
+        <input type="radio" id="50x50_75" name="draw-selection" value="50x50_75" v-model="drawSelection">
+        <label for="50x50_50">50x50 H75</label>
+        <input type="radio" id="50x50_100" name="draw-selection" value="50x50_100" v-model="drawSelection">
+        <label for="50x50_100">50x50 H100</label>
+        <br/>
+        <br/>
+        <input type="checkbox" name="singleSlabs" v-model="singleSlabs">
+        <label for="singleSlabs">Lastre altezza unica</label>
+        <br/>
+        <br/>
+        <button @click="getResults">CALCOLA</button>
+      </div>
     </div>
-    <div>
-      <input type="radio" id="25x25_50" name="draw-selection" value="25x25_50" v-model="drawSelection" checked>
-      <label for="25x25_50">25x25 H50</label>
-      <input type="radio" id="25x25_75" name="draw-selection" value="25x25_75" v-model="drawSelection">
-      <label for="25x25_50">25x25 H75</label>
-      <input type="radio" id="25x25_100" name="draw-selection" value="25x25_100" v-model="drawSelection">
-      <label for="25x25_100">25x25 H100</label>
-      <br/>
-      <input type="radio" id="25x50_50" name="draw-selection" value="25x50_50" v-model="drawSelection">
-      <label for="25x50_50">25x50 H50</label>
-      <input type="radio" id="25x50_75" name="draw-selection" value="25x50_75" v-model="drawSelection">
-      <label for="25x50_50">25x50 H75</label>
-      <input type="radio" id="25x50_100" name="draw-selection" value="25x50_100" v-model="drawSelection">
-      <label for="25x50_100">25x50 H100</label>
-      <br/>
-      <input type="radio" id="50x25_50" name="draw-selection" value="50x25_50" v-model="drawSelection">
-      <label for="50x25_50">50x25 H50</label>
-      <input type="radio" id="50x25_75" name="draw-selection" value="50x25_75" v-model="drawSelection">
-      <label for="50x25_50">50x25 H75</label>
-      <input type="radio" id="50x25_100" name="draw-selection" value="50x25_100" v-model="drawSelection">
-      <label for="50x25_100">50x25 H100</label>
-      <br/>
-      <input type="radio" id="50x50_50" name="draw-selection" value="50x50_50" v-model="drawSelection">
-      <label for="50x50_50">50x50 H50</label>
-      <input type="radio" id="50x50_75" name="draw-selection" value="50x50_75" v-model="drawSelection">
-      <label for="50x50_50">50x50 H75</label>
-      <input type="radio" id="50x50_100" name="draw-selection" value="50x50_100" v-model="drawSelection">
-      <label for="50x50_100">50x50 H100</label>
-      <br/>
-      <br/>
-      <input type="checkbox" name="singleSlabs" v-model="singleSlabs">
-      <label for="singleSlabs">Lastre altezza unica</label>
-      <br/>
-      <br/>
-      <button @click="getResults">CALCOLA</button>
+    <div class="row">
+      <div class="col">
+        <table style="font-size:11px;">
+          <thead>
+            <tr>
+              <th style="padding: 0 15px;">Bas 25x25</th>
+              <th style="padding: 0 15px;">Bas 25x50</th>
+              <th style="padding: 0 15px;">Bas 50x50</th>
+              <th style="padding: 0 15px;">Lastre 25x25</th>
+              <th style="padding: 0 15px;">Lastre 25x50</th>
+              <th style="padding: 0 15px;">Lastre 25x75</th>
+              <th style="padding: 0 15px;">Lastre 25x100</th>
+              <th style="padding: 0 15px;">Lastre 50x50</th>
+              <th style="padding: 0 15px;">Lastre 50x75</th>
+              <th style="padding: 0 15px;">Lastre 50x100</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ computeResult.B25x25 }}</td>
+              <td>{{ computeResult.B25x50 }}</td>
+              <td>{{ computeResult.B50x50 }}</td>
+              <td>{{ computeResult.L25x25 }}</td>
+              <td>{{ computeResult.L25x50 }}</td>
+              <td>{{ computeResult.L25x75 }}</td>
+              <td>{{ computeResult.L25x100 }}</td>
+              <td>{{ computeResult.L50x50 }}</td>
+              <td>{{ computeResult.L50x75 }}</td>
+              <td>{{ computeResult.L50x100 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div>
-      <table style="font-size:11px;margin-top: 15px;">
-        <thead>
-          <tr>
-            <th style="padding: 0 15px;">Bas 25x25</th>
-            <th style="padding: 0 15px;">Bas 25x50</th>
-            <th style="padding: 0 15px;">Bas 50x50</th>
-            <th style="padding: 0 15px;">Lastre 25x25</th>
-            <th style="padding: 0 15px;">Lastre 25x50</th>
-            <th style="padding: 0 15px;">Lastre 25x75</th>
-            <th style="padding: 0 15px;">Lastre 25x100</th>
-            <th style="padding: 0 15px;">Lastre 50x50</th>
-            <th style="padding: 0 15px;">Lastre 50x75</th>
-            <th style="padding: 0 15px;">Lastre 50x100</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ computeResult.B25x25 }}</td>
-            <td>{{ computeResult.B25x50 }}</td>
-            <td>{{ computeResult.B50x50 }}</td>
-            <td>{{ computeResult.L25x25 }}</td>
-            <td>{{ computeResult.L25x50 }}</td>
-            <td>{{ computeResult.L25x75 }}</td>
-            <td>{{ computeResult.L25x100 }}</td>
-            <td>{{ computeResult.L50x50 }}</td>
-            <td>{{ computeResult.L50x75 }}</td>
-            <td>{{ computeResult.L50x100 }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="row">
+      <div class="col">
+        <table style="font-size:11px;">
+          <thead>
+            <tr>
+              <th style="padding: 0 15px;">Lineari</th>
+              <th style="padding: 0 15px;">Interni</th>
+              <th style="padding: 0 15px;">Esterni</th>
+              <th style="padding: 0 15px;">Centrali</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ computeResult.linearPoints }}</td>
+              <td>{{ computeResult.internalPoints }}</td>
+              <td>{{ computeResult.externalPoints }}</td>
+              <td>{{ computeResult.centralPoints }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <br/>
-    <div>
-      <table style="font-size:11px;margin-top: 15px;">
-        <thead>
-          <tr>
-            <th style="padding: 0 15px;">Lineari</th>
-            <th style="padding: 0 15px;">Interni</th>
-            <th style="padding: 0 15px;">Esterni</th>
-            <th style="padding: 0 15px;">Centrali</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ computeResult.linearPoints }}</td>
-            <td>{{ computeResult.internalPoints }}</td>
-            <td>{{ computeResult.externalPoints }}</td>
-            <td>{{ computeResult.centralPoints }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="row">
+      <div class="col">
+        <table style="font-size:11px;">
+          <thead>
+            <tr>
+              <th style="padding: 0 15px;">Giunto Alto</th>
+              <th style="padding: 0 15px;">Giunto Basso</th>
+              <th style="padding: 0 15px;">Tirante Orizz.</th>
+              <th style="padding: 0 15px;">Tirante Obliquo</th>
+              <th style="padding: 0 15px;">Tirante Obliquo H50</th>
+              <th style="padding: 0 15px;">Tirante Obliquo H75</th>
+              <th style="padding: 0 15px;">Tirante Obliquo H100</th>
+              <th style="padding: 0 15px;">Piantana</th>
+              <th style="padding: 0 15px;">Angolare</th>
+              <th style="padding: 0 15px;">Squadr. Anc.</th>
+              <th style="padding: 0 15px;">Elemento Crocera</th>
+              <th style="padding: 0 15px;">Basamento</th>
+              <th style="padding: 0 15px;">Spinotto Corto</th>
+              <th style="padding: 0 15px;">Piastra Lineare</th>
+              <th style="padding: 0 15px;">Piastra Angolare</th>
+              <th style="padding: 0 15px;">Piastra L</th>
+              <th style="padding: 0 15px;">Allin Z</th>
+              <th style="padding: 0 15px;">Allin L</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
