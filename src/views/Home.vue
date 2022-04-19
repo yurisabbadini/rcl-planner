@@ -1,4 +1,5 @@
 <template>
+<div>
   <div style="display:grid;grid-template-columns: 60% 40%;">
     <div>
       <table class="plan" cellspacing="0">
@@ -99,6 +100,7 @@
       </table>
     </div>
   </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -109,7 +111,7 @@ import { DrawPlan, SelectedCellSections, ToggleParams, CellSectionCoordinates, C
 export default defineComponent({
   name: "Home",
   components: {
-    Cell,
+    Cell
   },
   data () {
     return {
