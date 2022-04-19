@@ -95,10 +95,10 @@
           </thead>
           <tbody>
             <tr>
-              <td>{{ computeResult.linearPoints }}</td>
-              <td>{{ computeResult.internalPoints }}</td>
-              <td>{{ computeResult.externalPoints }}</td>
-              <td>{{ computeResult.centralPoints }}</td>
+              <td>{{ computeResult.points.filter((x) => x.type == "linear").length }}</td>
+              <td>{{ computeResult.points.filter((x) => x.type == "internal").length }}</td>
+              <td>{{ computeResult.points.filter((x) => x.type == "external").length }}</td>
+              <td>{{ computeResult.points.filter((x) => x.type == "central").length }}</td>
             </tr>
           </tbody>
         </table>
@@ -188,11 +188,7 @@ export default defineComponent({
         L50x50: 0,
         L50x75: 0,
         L50x100: 0,
-        points: [],
-        linearPoints: 0,
-        internalPoints: 0,
-        externalPoints: 0,
-        centralPoints: 0
+        points: []
       } as ComputeResult
     }
   },
@@ -1563,6 +1559,7 @@ export default defineComponent({
     },
 
     getLinearPoints() {
+      //TODO: rimuovere i punti che fanno parte di un blocco
       const data = Object.values(this.selectedCellSections);
       data.forEach((x) => {
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
