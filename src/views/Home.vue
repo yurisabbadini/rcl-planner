@@ -161,7 +161,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Cell from "../components/Cell.vue";
-import { DrawPlan, SelectedCellSections, ToggleParams, CellSectionCoordinates, ComputeResult } from "../appTypes";
+import { DrawPlan, SelectedCellSections, ToggleParams, CellSectionCoordinates, ComputeResult, Point } from "../appTypes";
 
 export default defineComponent({
   name: "Home",
@@ -1559,7 +1559,6 @@ export default defineComponent({
     },
 
     getLinearPoints() {
-      //TODO: rimuovere i punti che fanno parte di un blocco
       const data = Object.values(this.selectedCellSections);
       data.forEach((x) => {
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
@@ -1659,6 +1658,23 @@ export default defineComponent({
               type: "linear"
             });
           }
+        }
+      });
+
+      const pointsToRemove: Point[] = [];
+      this.computeResult.points.forEach((p: Point) => {
+        const data = Object.values(this.selectedCellSections);
+        const cell = data.find((x) => x.cellSectionId == p.cellSectionId);
+        if(cell?.hBlock || cell?.vBlock || cell?.ignored) {
+          pointsToRemove.push(p);
+        }
+      });
+      pointsToRemove.forEach((ptr) => {
+        let pointIndex = this.computeResult.points.findIndex((x) => x.cellSectionId == ptr.cellSectionId);
+        console.log(pointIndex);
+        while(pointIndex > -1) {
+          this.computeResult.points.splice(pointIndex, 1);
+          pointIndex = this.computeResult.points.findIndex((x) => x.cellSectionId == ptr.cellSectionId);
         }
       });
     },
