@@ -230,7 +230,7 @@ export default defineComponent({
           this.selectedCellSections[section3Id].ignoredPoints = ["top-right", "bottom-right", "top-left"];
           this.initBlock(section4Id);
           this.selectedCellSections[section4Id].ignored = true;
-          this.selectedCellSections[section3Id].ignoredPoints = ["top-right", "bottom-left", "top-left"];
+          this.selectedCellSections[section4Id].ignoredPoints = ["top-right", "bottom-left", "top-left"];
           return;
         }
       }
@@ -1849,6 +1849,74 @@ export default defineComponent({
       data.forEach((x) => {
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCellCoordinates = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-left",
+              type: "external"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+        
+        if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-right",
+              type: "external"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+
+        if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-left",
+              type: "external"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+
+        if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId)) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-right",
+              type: "external"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
       });
     },
 
@@ -1857,6 +1925,74 @@ export default defineComponent({
       data.forEach((x) => {
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCellCoordinates = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-left")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-left",
+              type: "central"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+        
+        if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-right")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-right",
+              type: "central"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+
+        if(this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-left")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-left",
+              type: "central"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+
+        if(this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-right")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-right",
+              type: "central"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
       });
     },
 
