@@ -49,4 +49,21 @@ export type ComputeResult = {
   L50x75: number;
   L50x100: number;
   points: Point[];
+  giuntoAlto: number;
+  giuntoBasso: number;
+  tiranteOrizzontale: number;
+  tiranteObliquo: number;
+  tiranteObliquoH50: number;
+  tiranteObliquoH75: number;
+  tiranteObliquoH100: number;
+  piantana: number;
+  angolare: number;
+  squadrettaAncoraggio: number;
+  elementoCrocera: number;
+  spinottoCorto: number;
+  piastraLineare: number;
+  piastraAngolare: number;
+  piastraL: number;
+  allinZ: number;
+  allinL: number;
 }

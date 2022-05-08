@@ -120,7 +120,6 @@
               <th style="padding: 0 15px;">Angolare</th>
               <th style="padding: 0 15px;">Squadr. Anc.</th>
               <th style="padding: 0 15px;">Elemento Crocera</th>
-              <th style="padding: 0 15px;">Basamento</th>
               <th style="padding: 0 15px;">Spinotto Corto</th>
               <th style="padding: 0 15px;">Piastra Lineare</th>
               <th style="padding: 0 15px;">Piastra Angolare</th>
@@ -131,24 +130,23 @@
           </thead>
           <tbody>
             <tr>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
+              <td>{{ computeResult.giuntoAlto }}</td>
+              <td>{{ computeResult.giuntoBasso }}</td>
+              <td>{{ computeResult.tiranteOrizzontale }}</td>
+              <td>{{ computeResult.tiranteObliquo }}</td>
+              <td>{{ computeResult.tiranteObliquoH50 }}</td>
+              <td>{{ computeResult.tiranteObliquoH75 }}</td>
+              <td>{{ computeResult.tiranteObliquoH100 }}</td>
+              <td>{{ computeResult.piantana }}</td>
+              <td>{{ computeResult.angolare }}</td>
+              <td>{{ computeResult.squadrettaAncoraggio }}</td>
+              <td>{{ computeResult.elementoCrocera }}</td>
+              <td>{{ computeResult.spinottoCorto }}</td>
+              <td>{{ computeResult.piastraLineare }}</td>
+              <td>{{ computeResult.piastraAngolare }}</td>
+              <td>{{ computeResult.piastraL }}</td>
+              <td>{{ computeResult.allinZ }}</td>
+              <td>{{ computeResult.allinL }}</td>
             </tr>
           </tbody>
         </table>
@@ -188,6 +186,23 @@ export default defineComponent({
         L50x50: 0,
         L50x75: 0,
         L50x100: 0,
+        allinL: 0,
+        allinZ: 0,
+        angolare: 0,
+        elementoCrocera: 0,
+        giuntoAlto: 0,
+        giuntoBasso: 0,
+        piantana: 0,
+        piastraAngolare: 0,
+        piastraL: 0,
+        piastraLineare: 0,
+        spinottoCorto: 0,
+        squadrettaAncoraggio: 0,
+        tiranteObliquo: 0,
+        tiranteObliquoH100: 0,
+        tiranteObliquoH50: 0,
+        tiranteObliquoH75: 0,
+        tiranteOrizzontale: 0,
         points: []
       } as ComputeResult
     }
@@ -2003,6 +2018,260 @@ export default defineComponent({
       this.getCentralPoints();
     },
 
+    getAccessori() {
+      this.computeResult.points.forEach((p) => {
+        const cell = this.selectedCellSections[p.cellSectionId];
+        const currentCellCoordinates = this.parseCellSectionId(p.cellSectionId);
+        const nearCellSections = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+        const topCell = this.selectedCellSections[nearCellSections.topCellSectionId];
+        const leftCell = this.selectedCellSections[nearCellSections.leftCellSectionId];
+        const rightCell = this.selectedCellSections[nearCellSections.rightCellSectionId];
+        const bottomCell = this.selectedCellSections[nearCellSections.bottomCellSectionId];
+        const topLeftCell = this.selectedCellSections[nearCellSections.topLeftCellSectionId];
+        const topRightCell = this.selectedCellSections[nearCellSections.topRightCellSectionId];
+        const bottomRightCell = this.selectedCellSections[nearCellSections.bottomRightCellSectionId];
+        const bottomLeftCell = this.selectedCellSections[nearCellSections.bottomLeftCellSectionId];
+        if(cell) {
+          if(p.type == "linear") {
+            const heights: (number | null)[] = [cell.height];
+            if(p.position == "top-left") {
+              heights.push(leftCell?.height || null);
+            } else if(p.position == "top-right") {
+              heights.push(rightCell?.height || null);
+            } else if(p.position == "bottom-left") {
+              heights.push(leftCell?.height || null);
+            } if(p.position == "bottom-right") {
+              heights.push(rightCell?.height || null);
+            }
+            if(heights.filter((h) => h == 50).length == 2) {
+              this.computeResult.giuntoAlto += 1;
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 1;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 1) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 1;
+              this.computeResult.angolare += 2;
+              this.computeResult.piastraL += 1;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 1;
+              this.computeResult.angolare += 2;
+              this.computeResult.piastraL += 1;
+            } else if(heights.filter((h) => h == 75).length == 2) {
+              this.computeResult.giuntoAlto += 1;
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.piastraLineare += 1;
+            } else if(heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.angolare += 2;
+              this.computeResult.piastraLineare += 1;
+              this.computeResult.allinZ += 1;
+              this.computeResult.allinL += 1;
+            } else if(heights.filter((h) => h == 100).length == 2) {
+              this.computeResult.giuntoAlto += 1;
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.piastraLineare += 1;
+            }
+          } else if(p.type == "internal") {
+            if(cell.height == 50) {
+              this.computeResult.angolare += 2;
+              this.computeResult.squadrettaAncoraggio += 1;
+            } else if(cell.height == 75) {
+              this.computeResult.angolare += 2;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraAngolare += 1;
+            } else if(cell.height == 100) {
+              this.computeResult.angolare += 2;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraAngolare += 1;
+            }
+          } else if(p.type == "external") {
+            const heights: (number | null)[] = [cell.height];
+            if(p.position == "top-left") {
+              heights.push(topCell?.height || null);
+              heights.push(leftCell?.height || null);
+            } else if(p.position == "top-right") {
+              heights.push(topCell?.height || null);
+              heights.push(rightCell?.height || null);
+            } else if(p.position == "bottom-left") {
+              heights.push(bottomCell?.height || null);
+              heights.push(leftCell?.height || null);
+            } if(p.position == "bottom-right") {
+              heights.push(bottomCell?.height || null);
+              heights.push(rightCell?.height || null);
+            }
+            if(heights.filter((h) => h == 50).length == 3) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.angolare += 2;
+              this.computeResult.squadrettaAncoraggio += 1;
+            } else if(heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 75).length == 1) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.angolare += 4;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraL += 1;
+            } else if(heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.angolare += 4;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraL += 1;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 2) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.angolare += 6;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraL += 2;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.angolare += 6;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraL += 2;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 100).length == 2) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.angolare += 6;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraL += 2;
+            } else if(heights.filter((h) => h == 75).length == 2 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.angolare += 4;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraAngolare += 1;
+              this.computeResult.allinZ += 1;
+              this.computeResult.allinL += 1;
+            } else if(heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 2) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.angolare += 6;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraAngolare += 1;
+              this.computeResult.allinZ += 2;
+            } else if(heights.filter((h) => h == 75).length == 3) {
+              this.computeResult.giuntoBasso += 1;
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.angolare += 2;
+              this.computeResult.squadrettaAncoraggio += 1;
+              this.computeResult.piastraAngolare += 1;
+            }
+          } else if(p.type == "central") {
+            const heights: (number | null)[] = [cell.height];
+            if(p.position == "top-left") {
+              heights.push(topCell?.height || null);
+              heights.push(leftCell?.height || null);
+              heights.push(topLeftCell?.height || null);
+            } else if(p.position == "top-right") {
+              heights.push(topCell?.height || null);
+              heights.push(rightCell?.height || null);
+              heights.push(topRightCell?.height || null);
+            } else if(p.position == "bottom-left") {
+              heights.push(bottomCell?.height || null);
+              heights.push(leftCell?.height || null);
+              heights.push(bottomLeftCell?.height || null);
+            } if(p.position == "bottom-right") {
+              heights.push(bottomCell?.height || null);
+              heights.push(rightCell?.height || null);
+              heights.push(bottomRightCell?.height || null);
+            }
+            if(heights.filter((h) => h == 50).length == 4) {
+              this.computeResult.elementoCrocera += 2;
+            } else if(heights.filter((h) => h == 75).length == 4) {
+              this.computeResult.elementoCrocera += 2;
+            } else if(heights.filter((h) => h == 100).length == 4) {
+              this.computeResult.elementoCrocera += 2;
+            } else if(heights.filter((h) => h == 50).length == 3 && heights.filter((h) => h == 75).length == 1) {
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH75 += 2;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 2;
+              this.computeResult.elementoCrocera += 2;
+            } else if(heights.filter((h) => h == 50).length == 3 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH100 += 2;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 2;
+              this.computeResult.elementoCrocera += 2;
+            } else if(heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.giuntoAlto += 1;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH75 += 1;
+              this.computeResult.tiranteObliquoH100 += 2;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 2;
+              this.computeResult.allinL += 1;
+              this.computeResult.allinZ += 1;
+            } else if(heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 75).length == 2) {
+              this.computeResult.giuntoAlto += 2;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.piantana += 1;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 3) {
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH75 += 2;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 2;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 2 && heights.filter((h) => h == 100).length == 1) {
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH75 += 2;
+              this.computeResult.tiranteObliquoH100 += 2;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 4;
+              this.computeResult.piastraL += 4;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 2) {
+              this.computeResult.giuntoAlto += 1;
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH75 += 1;
+              this.computeResult.tiranteObliquoH100 += 1;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 2;
+              this.computeResult.allinL += 2;
+            } else if(heights.filter((h) => h == 75).length == 2 && heights.filter((h) => h == 100).length == 2) {
+              this.computeResult.giuntoAlto += 2;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH75 += 1;
+              this.computeResult.tiranteObliquoH100 += 1;
+              this.computeResult.piantana += 1;
+            } else if(heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 100).length == 2) {
+              this.computeResult.giuntoAlto += 2;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH100 += 1;
+              this.computeResult.piantana += 1;
+            } else if(heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 100).length == 2) {
+              this.computeResult.giuntoAlto += 2;
+              this.computeResult.tiranteOrizzontale += 2;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH100 += 1;
+              this.computeResult.piantana += 1;
+            } else if(heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 100).length == 3) {
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH100 += 2;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 2;
+            } else if(heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 3) {
+              this.computeResult.tiranteOrizzontale += 4;
+              this.computeResult.tiranteObliquoH50 += 4;
+              this.computeResult.tiranteObliquoH75 += 1;
+              this.computeResult.tiranteObliquoH100 += 3;
+              this.computeResult.piantana += 1;
+              this.computeResult.angolare += 2;
+            }    
+          }
+        }
+      });
+    },
+
     getResults() {
       this.computeResult = {
         B25x25: 0,
@@ -2015,14 +2284,31 @@ export default defineComponent({
         L50x50: 0,
         L50x75: 0,
         L50x100: 0,
+        allinL: 0,
+        allinZ: 0,
+        angolare: 0,
+        elementoCrocera: 0,
+        giuntoAlto: 0,
+        giuntoBasso: 0,
+        piantana: 0,
+        piastraAngolare: 0,
+        piastraL: 0,
+        piastraLineare: 0,
+        spinottoCorto: 0,
+        squadrettaAncoraggio: 0,
+        tiranteObliquo: 0,
+        tiranteObliquoH100: 0,
+        tiranteObliquoH50: 0,
+        tiranteObliquoH75: 0,
+        tiranteOrizzontale: 0,
         points: []
       };
       this.getBasamenti();
       this.getLastre();
       this.getPoints();
+      this.getAccessori();
     },
-
-    //common functions
+    
     getCellSectionId(row: number, column: number, section: number): string {
       return `${row}_${column}_${section}`;
     },
@@ -2043,7 +2329,6 @@ export default defineComponent({
       return false;
     },
 
-    //Toggle functions
     removeSelectedCellSection(id: string) {
       if(this.selectedCellSections[id]) {
         delete this.selectedCellSections[id];
