@@ -27,12 +27,13 @@ export interface SelectedCellSections {
     isSquare: boolean;
     hBlock: boolean;
     vBlock: boolean;
+    ignoredPoints: ("top-left" | "top-right" | "bottom-left" | "bottom-right")[];
   }
 }
 
 export type Point = {
   cellSectionId: string;
-  type: "linear" | "internal" | "external" | "central";
+  type: "linear" | "internal" | "external" | "central" | "ignore";
   position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 }
 

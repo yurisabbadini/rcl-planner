@@ -221,12 +221,16 @@ export default defineComponent({
         if(this.selectedCellSections[section1Id].height == referenceHeight && this.selectedCellSections[section2Id].height == referenceHeight && this.selectedCellSections[section3Id].height == referenceHeight && this.selectedCellSections[section4Id].height == referenceHeight) {
           this.initBlock(section1Id);
           this.selectedCellSections[section1Id].isSquare = true;
+          this.selectedCellSections[section1Id].ignoredPoints = ["top-right", "bottom-right", "bottom-left"];
           this.initBlock(section2Id);
           this.selectedCellSections[section2Id].ignored = true;
+          this.selectedCellSections[section2Id].ignoredPoints = ["top-left", "bottom-left", "bottom-right"];
           this.initBlock(section3Id);
           this.selectedCellSections[section3Id].ignored = true;
+          this.selectedCellSections[section3Id].ignoredPoints = ["top-right", "bottom-right", "top-left"];
           this.initBlock(section4Id);
           this.selectedCellSections[section4Id].ignored = true;
+          this.selectedCellSections[section3Id].ignoredPoints = ["top-right", "bottom-left", "top-left"];
           return;
         }
       }
@@ -262,16 +266,20 @@ export default defineComponent({
         if(this.selectedCellSections[section1Id].height == this.selectedCellSections[section2Id].height && !this.cellSectionParsed(section2Id)) {
           this.initBlock(section1Id);
           this.selectedCellSections[section1Id].hBlock = true;
+          this.selectedCellSections[section1Id].ignoredPoints = ["bottom-right", "top-right"];
           this.initBlock(section2Id);
           this.selectedCellSections[section2Id].ignored = true;
+          this.selectedCellSections[section2Id].ignoredPoints = ["bottom-left", "top-left"];
           return;
         }
       } else if(cellSectionCoordinates.section == 3 && this.selectedCellSections[section4Id]) {
         if(this.selectedCellSections[section3Id].height == this.selectedCellSections[section4Id].height && !this.cellSectionParsed(section4Id)) {
           this.initBlock(section3Id);
           this.selectedCellSections[section3Id].hBlock = true;
+          this.selectedCellSections[section3Id].ignoredPoints = ["bottom-right", "top-right"];
           this.initBlock(section4Id);
           this.selectedCellSections[section4Id].ignored = true;
+          this.selectedCellSections[section4Id].ignoredPoints = ["bottom-left", "top-left"];
           return;
         }
       } else {
@@ -301,16 +309,20 @@ export default defineComponent({
         if(this.selectedCellSections[section1Id].height == this.selectedCellSections[section3Id].height) {
           this.initBlock(section1Id);
           this.selectedCellSections[section1Id].vBlock = true;
+          this.selectedCellSections[section1Id].ignoredPoints = ["bottom-left", "bottom-right"];
           this.initBlock(section3Id);
           this.selectedCellSections[section3Id].ignored = true;
+          this.selectedCellSections[section3Id].ignoredPoints = ["top-left", "top-right"];
           return;
         }
       } else if(cellSectionCoordinates.section == 2 && this.selectedCellSections[section4Id] && !this.cellSectionParsed(section4Id)) {
         if(this.selectedCellSections[section2Id].height == this.selectedCellSections[section4Id].height) {
           this.initBlock(section2Id);
           this.selectedCellSections[section2Id].vBlock = true;
+          this.selectedCellSections[section2Id].ignoredPoints = ["bottom-left", "bottom-right"];
           this.initBlock(section4Id);
           this.selectedCellSections[section4Id].ignored = true;
+          this.selectedCellSections[section4Id].ignoredPoints = ["top-left", "top-right"];
           return;
         }
       } else {
@@ -1548,13 +1560,75 @@ export default defineComponent({
       this.computeResult.B25x25 = data.filter((x) => !x.isSquare && !x.hBlock && !x.vBlock && !x.ignored).length;
     },
 
-    getSameAngles(row: number, column: number, section: number, position: "top-left" | "top-right" | "bottom-left" | "bottom-right"): string[] {
-      const res: string[] = [];
-      //TODO: identificare i punti che hanno id diverso ma sono lo stesso
-      //top-left -> bottom-left_top;bottom-right_top-left;top-right_left
-      //bottom-left -> bottom-right_left;top-right_bottom-left;top-left_bottom
-      //bottom-right -> top-right_bottom;top-left_bottom-right;bottom-left_right
-      //top-right -> bottom-right_top;bottom-left_top-right;top-left_right
+    getOverlappingPoints(row: number, column: number, section: number, position: "top-left" | "top-right" | "bottom-left" | "bottom-right"): Point[] {
+      const res: Point[] = [];
+      const nearCells = this.getCellSectionNearCells(row, column, section);
+
+      if(position == "top-right") {
+        res.push({
+          cellSectionId: nearCells.topCellSectionId,
+          position: "bottom-right",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.rightCellSectionId,
+          position: "top-left",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.topRightCellSectionId,
+          position: "bottom-left",
+          type: "ignore"
+        });
+      } else if(position == "top-left") {
+        res.push({
+          cellSectionId: nearCells.topCellSectionId,
+          position: "bottom-left",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.topLeftCellSectionId,
+          position: "bottom-right",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.leftCellSectionId,
+          position: "top-right",
+          type: "ignore"
+        });
+      } else if(position == "bottom-left") {
+        res.push({
+          cellSectionId: nearCells.leftCellSectionId,
+          position: "bottom-right",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.bottomCellSectionId,
+          position: "top-right",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.bottomCellSectionId,
+          position: "top-left",
+          type: "ignore"
+        });
+      } else if(position == "bottom-right") {
+        res.push({
+          cellSectionId: nearCells.bottomCellSectionId,
+          position: "top-right",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.bottomRightCellSectionId,
+          position: "top-left",
+          type: "ignore"
+        });
+        res.push({
+          cellSectionId: nearCells.rightCellSectionId,
+          position: "bottom-left",
+          type: "ignore"
+        });
+      }
       return res;
     },
 
@@ -1567,11 +1641,15 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.leftCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-left")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "top-left",
               type: "linear"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
             });
           }
         }
@@ -1579,11 +1657,15 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.rightCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-right")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "top-right",
               type: "linear"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
             });
           }
         }
@@ -1591,11 +1673,15 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-left")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "top-left",
               type: "linear"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
             });
           }
         }
@@ -1603,11 +1689,15 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-left")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "bottom-left",
               type: "linear"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
             });
           }
         }
@@ -1615,11 +1705,15 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-right")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "top-right",
               type: "linear"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
             });
           }
         }
@@ -1627,11 +1721,15 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-right")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "bottom-right",
               type: "linear"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
             });
           }
         }
@@ -1639,11 +1737,15 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.leftCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-left")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "bottom-left",
               type: "linear"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
             });
           }
         }
@@ -1651,30 +1753,17 @@ export default defineComponent({
           !this.selectedCellSections[nearCellCoordinates.rightCellSectionId] &&
           !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
         ) {
-          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId)) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-right")) {
             this.computeResult.points.push({
               cellSectionId: x.cellSectionId,
               position: "bottom-right",
               type: "linear"
             });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
           }
-        }
-      });
-
-      const pointsToRemove: Point[] = [];
-      this.computeResult.points.forEach((p: Point) => {
-        const data = Object.values(this.selectedCellSections);
-        const cell = data.find((x) => x.cellSectionId == p.cellSectionId);
-        if(cell?.hBlock || cell?.vBlock || cell?.ignored) {
-          pointsToRemove.push(p);
-        }
-      });
-      pointsToRemove.forEach((ptr) => {
-        let pointIndex = this.computeResult.points.findIndex((x) => x.cellSectionId == ptr.cellSectionId);
-        console.log(pointIndex);
-        while(pointIndex > -1) {
-          this.computeResult.points.splice(pointIndex, 1);
-          pointIndex = this.computeResult.points.findIndex((x) => x.cellSectionId == ptr.cellSectionId);
         }
       });
     },
@@ -1684,6 +1773,74 @@ export default defineComponent({
       data.forEach((x) => {
         const currentCellCoordinates = this.parseCellSectionId(x.cellSectionId);
         const nearCellCoordinates = this.getCellSectionNearCells(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section);
+
+        if(!this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topLeftCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "top-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-left")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-left",
+              type: "internal"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+
+        if(!this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.topCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.topRightCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "top-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("top-right")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "top-right",
+              type: "internal"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "top-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+
+        if(!this.selectedCellSections[nearCellCoordinates.leftCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomLeftCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-left" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-left")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-left",
+              type: "internal"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-left");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
+
+        if(!this.selectedCellSections[nearCellCoordinates.rightCellSectionId] && 
+          !this.selectedCellSections[nearCellCoordinates.bottomCellSectionId] &&
+          !this.selectedCellSections[nearCellCoordinates.bottomRightCellSectionId]
+        ) {
+          if(!this.computeResult.points.find((p) => p.position == "bottom-right" && p.cellSectionId == x.cellSectionId) && !x.ignoredPoints.includes("bottom-right")) {
+            this.computeResult.points.push({
+              cellSectionId: x.cellSectionId,
+              position: "bottom-right",
+              type: "internal"
+            });
+            const ignoredPoints = this.getOverlappingPoints(currentCellCoordinates.row, currentCellCoordinates.column, currentCellCoordinates.section, "bottom-right");
+            ignoredPoints.forEach((p) => {
+              this.computeResult.points.push(p);
+            });
+          }
+        }
       });
     },
 
@@ -1767,7 +1924,8 @@ export default defineComponent({
           ignored: false,
           isSquare: false,
           hBlock: false,
-          vBlock: false
+          vBlock: false,
+          ignoredPoints: []
         };
       }
     },
