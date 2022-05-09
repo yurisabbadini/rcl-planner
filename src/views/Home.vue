@@ -14,12 +14,15 @@
       <div class="col-md-4 q-pl-md">
         <q-card class="rcl-card q-mb-md">
           <q-card-section>
-            <div class="text-h6">Our Changing Planet</div>
-            <div class="text-subtitle2">by John Doe</div>
+            <div class="text-h6">{{ t('istruzioni') }}</div>
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            {{ lorem }}
+            <ol>
+              <li>riga 1</li>
+              <li>riga 2</li>
+              <li>riga 3</li>
+            </ol>
           </q-card-section>
         </q-card>
           
@@ -171,11 +174,24 @@
 import { defineComponent } from "vue";
 import Cell from "../components/Cell.vue";
 import { DrawPlan, SelectedCellSections, ToggleParams, CellSectionCoordinates, ComputeResult, Point } from "../appTypes";
+import { useI18n } from "vue-i18n";
+
+/*
+SEGNARE COME ROSSE CASELLE DEL DISEGNO E IMPEDIRE IL CALCOLA SE CI SONO ERRORI
+GLI ERRORI CI SONO SE SIAMO NEL CASO DI UNA 'COMPOSIZIONE BASE' (QUELLE DELL'EXCEL) CHE SI DISPONE OLTRE I BORDI DI UNA CELLA
+*/
 
 export default defineComponent({
   name: "Home",
   components: {
     Cell
+  },
+  setup() {
+    const { t } = useI18n({
+      inheritLocale: true,
+      useScope: 'local'
+    })
+    return { t }
   },
   data () {
     return {
@@ -2580,3 +2596,11 @@ export default defineComponent({
   width: 100%;
 }
 </style>
+
+<i18n>
+{
+  "it": {
+    "istruzioni": "Istruzioni"
+  }
+}
+</i18n>

@@ -9,6 +9,15 @@ module.exports = {
       quasar: {
         importStrategy: 'kebab',
         rtlSupport: false
+      },
+      i18n: {
+        locale: 'it',
+        fallbackLocale: 'it',
+        localeDir: 'locales',
+        enableLegacy: false,
+        runtimeOnly: false,
+        compositionOnly: false,
+        fullInstall: true
       }
     },
 
