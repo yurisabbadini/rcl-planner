@@ -1,5 +1,5 @@
 <template>
-  <td v-if="!cellIgnored" :class="computedClass" @click="toggle" :rowspan="cellRowSpan" :colspan="cellColumnSpan" :style="`width: ${sectionSize}px; height: ${sectionSize}px;`">
+  <td v-if="!cellIgnored" :class="computedClass" @click="toggle" :rowspan="cellRowSpan" :colspan="cellColumnSpan" :style="`width: ${cellSectionSize}px; height: ${cellSectionSize}px;`">
     {{ cellIgnored ? "" : cellHeight > 0 ? cellHeight : "" }}
   </td>
 </template>
@@ -60,6 +60,13 @@ export default defineComponent({
         return 2;
       }
       return 1;
+    },
+    cellSectionSize(): number {
+      if(this.cellIsSquare) {
+        return this.sectionSize * 2;
+      } else {
+        return this.sectionSize;
+      }
     }
   },
   methods: {
