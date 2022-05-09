@@ -1,17 +1,28 @@
 <template>
 <div>
   <div class="q-pa-md">
-    <div class="row">
-      <div class="col">
+    <div  class="row">
+      <div class="col-md-8" ref="planWrapper">
         <table class="plan" cellspacing="0">
           <tr v-for="r of drawPlan.rows" :key="r">
             <td class="cell-wrapper" v-for="c of drawPlan.columns" :key="c">
-              <Cell :row="r" :column="c" :cellId="`${r}_${c}`" :selectedCellSections="selectedCellSections" @toggle="toggle"/>
+              <Cell :row="r" :column="c" :cellId="`${r}_${c}`" :selectedCellSections="selectedCellSections" :sectionSize="sectionSize" @toggle="toggle"/>
             </td>
           </tr>
         </table>
       </div>
-      <div class="col">
+      <div class="col-md-4 q-pl-md">
+        <q-card class="rcl-card q-mb-md">
+          <q-card-section>
+            <div class="text-h6">Our Changing Planet</div>
+            <div class="text-subtitle2">by John Doe</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            {{ lorem }}
+          </q-card-section>
+        </q-card>
+          
         <input type="radio" id="25x25_50" name="draw-selection" value="25x25_50" v-model="drawSelection" checked>
         <label for="25x25_50">25x25 H50</label>
         <input type="radio" id="25x25_75" name="draw-selection" value="25x25_75" v-model="drawSelection">
@@ -48,7 +59,7 @@
         <button @click="getResults">CALCOLA</button>
       </div>
     </div>
-    <div class="row">
+    <div  class="row">
       <div class="col">
         <table style="font-size:11px;">
           <thead>
@@ -82,7 +93,7 @@
         </table>
       </div>
     </div>
-    <div class="row">
+    <div  class="row">
       <div class="col">
         <table style="font-size:11px;">
           <thead>
@@ -104,7 +115,7 @@
         </table>
       </div>
     </div>
-    <div class="row">
+    <div  class="row">
       <div class="col">
         <table style="font-size:11px;">
           <thead>
@@ -169,10 +180,11 @@ export default defineComponent({
   data () {
     return {
       drawPlan: { 
-        rows: 10,
-        columns: 10
+        rows: 30,
+        columns: 30
       } as DrawPlan,
       drawSelection: "25x25_50" as string,
+      sectionSize: 0 as number,
       selectedCellSections: {} as SelectedCellSections,
       singleSlabs: false,
       computeResult: {
@@ -207,6 +219,13 @@ export default defineComponent({
       } as ComputeResult
     }
   },
+  mounted () {
+    this.getCellSize();
+		this.$nextTick(() => {
+			window.addEventListener("resize", this.getCellSize);
+		});
+  },
+
   computed: {
     blockSize(): string {
       return this.drawSelection.split("_")[0];
@@ -215,7 +234,17 @@ export default defineComponent({
       return Number(this.drawSelection.split("_")[1]);
     }
   },
+
   methods: {
+    getCellSize() {
+      try{
+        const wrapperSize = (this.$refs.planWrapper as HTMLDivElement).offsetWidth;
+        this.sectionSize = wrapperSize / (this.drawPlan.columns * 2);
+      }catch {
+        //
+      }
+    },
+
     initBlock(key: string) {
       if(this.selectedCellSections[key]) {
         this.selectedCellSections[key].ignored = false;
@@ -2545,5 +2574,9 @@ export default defineComponent({
   border-collapse: collapse;
   margin: 0;
   border: 1px solid black;
+}
+
+.rcl-card {
+  width: 100%;
 }
 </style>

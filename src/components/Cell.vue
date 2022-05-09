@@ -1,12 +1,12 @@
 <template>
   <table class="cell-container" cellspacing="0">
     <tr>
-      <CellSection :position="topLeft" :row="row" :column="column" :section="1" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle"/>
-      <CellSection :position="topRight" :row="row" :column="column" :section="2" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle"/>
+      <CellSection :position="topLeft" :row="row" :column="column" :section="1" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle" :sectionSize="sectionSize" />
+      <CellSection :position="topRight" :row="row" :column="column" :section="2" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle" :sectionSize="sectionSize" />
     </tr>
     <tr>
-      <CellSection :position="bottomLeft" :row="row" :column="column" :section="3" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle"/>
-      <CellSection :position="bottomRight" :row="row" :column="column" :section="4" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle"/>
+      <CellSection :position="bottomLeft" :row="row" :column="column" :section="3" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle" :sectionSize="sectionSize" />
+      <CellSection :position="bottomRight" :row="row" :column="column" :section="4" :cellId="cellId" :selectedCellSections="selectedCellSections" @toggle="toggle" :sectionSize="sectionSize" />
     </tr>
   </table>
 </template>
@@ -25,7 +25,8 @@ export default defineComponent({
     "row",
     "column",
     "cellId",
-    "selectedCellSections"
+    "selectedCellSections",
+    "sectionSize"
   ],
   data () {
     return {

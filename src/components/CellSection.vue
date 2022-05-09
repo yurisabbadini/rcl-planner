@@ -1,5 +1,5 @@
 <template>
-  <td v-if="!cellIgnored" :class="computedClass" @click="toggle" :rowspan="cellRowSpan" :colspan="cellColumnSpan">
+  <td v-if="!cellIgnored" :class="computedClass" @click="toggle" :rowspan="cellRowSpan" :colspan="cellColumnSpan" :style="`width: ${sectionSize}px; height: ${sectionSize}px;`">
     {{ cellIgnored ? "" : cellHeight > 0 ? cellHeight : "" }}
   </td>
 </template>
@@ -16,7 +16,8 @@ export default defineComponent({
     "column",
     "section",
     "cellId",
-    "selectedCellSections"
+    "selectedCellSections",
+    "sectionSize"
   ],
   computed: {
     computedClass(): string {
@@ -74,7 +75,7 @@ export default defineComponent({
         section: section
       }
       this.$emit("toggle", toggleParams);
-    },
+    }
   }
 });
 </script>
