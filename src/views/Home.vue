@@ -167,7 +167,7 @@ export default defineComponent({
       drawSelection: "" as string,
       sectionSize: 0 as number,
       selectedCellSections: {} as SelectedCellSections,
-      singleSlabs: false,
+      singleSlabs: true,
       computeResult: {
         B25x25: 0,
         B25x50: 0,
