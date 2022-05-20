@@ -14,6 +14,7 @@
       <div class="col-md-4 q-pl-md">
         <RightBar 
           @planDataChanged="planDataChanged($event)"
+          @clearDraw="clearDraw"
         />
           
         <input type="radio" id="25x25_50" name="draw-selection" value="25x25_50" v-model="drawSelection" checked>
@@ -260,6 +261,13 @@ export default defineComponent({
       } catch {
         //
       }
+    },
+
+    clearDraw() {
+      const data = Object.values(this.selectedCellSections);
+      data.forEach((x) => {
+        this.removeSelectedCellSection(x.cellSectionId);
+      });
     },
 
     getResults() {
