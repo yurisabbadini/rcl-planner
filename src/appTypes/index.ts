@@ -67,3 +67,8 @@ export type ComputeResult = {
   allinZ: number;
   allinL: number;
 }
+
+export type FlowerBoxLine = {
+  value: string;
+  label: string;
+}

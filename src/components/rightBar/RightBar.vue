@@ -1,6 +1,7 @@
 <template>
   <Instructions />
   <PlanSettings @dataChanged="planDataChanged($event)" @clearDraw="clearDraw"/>
+  <FlowerBoxSpec :lines="lines"/>
 </template>
 
 <script lang="ts">
@@ -8,14 +9,17 @@ import { defineComponent } from 'vue'
 
 import Instructions from "./Instructions.vue";
 import PlanSettings from "./PlanSettings.vue";
+import FlowerBoxSpec from "./FlowerBoxSpec.vue";
 
 export default defineComponent({
   name: 'RightBar',
   emits: ["planDataChanged", "clearDraw"],
   components: {
     Instructions,
-    PlanSettings
+    PlanSettings,
+    FlowerBoxSpec
   },
+  props: ["lines"],
   methods: {
     planDataChanged(data: { rows: number; columns: number; }) {
       this.$emit("planDataChanged", data);

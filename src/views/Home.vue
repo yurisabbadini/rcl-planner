@@ -13,6 +13,7 @@
       </div>
       <div class="col-md-4 q-pl-md">
         <RightBar 
+          :lines="lines"
           @planDataChanged="planDataChanged($event)"
           @clearDraw="clearDraw"
         />
@@ -165,9 +166,10 @@
 import { defineComponent } from "vue";
 import Cell from "../components/Cell.vue";
 import RightBar from "../components/rightBar/RightBar.vue";
-import { DrawPlan, SelectedCellSections, ToggleParams, ComputeResult } from "../appTypes";
+import { DrawPlan, SelectedCellSections, ToggleParams, ComputeResult, FlowerBoxLine } from "../appTypes";
 import { useI18n } from "vue-i18n";
 import { cellSectionParsed, checkIfSquare, checkIfHBlock, checkIfVBlock, getCellSectionId, getBasamenti, getLastre, getPoints, getAccessori } from "../modules/compute";
+import { getLines } from "../modules/repository";
 
 /*
 SEGNARE COME ROSSE CASELLE DEL DISEGNO E IMPEDIRE IL CALCOLA SE CI SONO ERRORI
@@ -191,6 +193,7 @@ export default defineComponent({
   },
   data () {
     return {
+      lines: [] as FlowerBoxLine[],
       drawPlan: { 
         rows: 30,
         columns: 30
@@ -236,6 +239,7 @@ export default defineComponent({
 		this.$nextTick(() => {
 			window.addEventListener("resize", this.getCellSize);
 		});
+    this.lines = getLines();
   },
 
   computed: {
