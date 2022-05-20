@@ -15,9 +15,6 @@
         <q-card class="rcl-card q-mb-md">
           <q-card-section>
             <div class="text-h6">{{ t('istruzioni') }}</div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
             <ol>
               <li>riga 1</li>
               <li>riga 2</li>
