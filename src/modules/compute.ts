@@ -1456,6 +1456,12 @@ export function getLastre(singleSlabs: boolean, selectedCellSections: SelectedCe
     computeResult = getLastreHBlock(singleSlabs, selectedCellSections, computeResult);
     computeResult = getLastreSquare(singleSlabs, selectedCellSections, computeResult);
 
+    computeResult.L25x50 += computeResult.L25x100 * 2;
+    computeResult.L25x100 = 0;
+    computeResult.L25x50 += computeResult.L25x75;
+    computeResult.L25x25 += computeResult.L25x75;
+    computeResult.L25x75 = 0;
+    
     return computeResult;
 }
 
