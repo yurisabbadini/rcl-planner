@@ -19,7 +19,7 @@
           @selectedBlockChanged="selectedBlockChanged($event)"
         />
         <br/>
-        <button @click="getResults">CALCOLA</button>
+        <q-btn color="accent" :label="t('computeLabel')" @click="getResults" />
       </div>
     </div>
     <div  class="row">
@@ -142,6 +142,7 @@ import { getLines } from "../modules/repository";
 /*
 SEGNARE COME ROSSE CASELLE DEL DISEGNO E IMPEDIRE IL CALCOLA SE CI SONO ERRORI
 GLI ERRORI CI SONO SE SIAMO NEL CASO DI UNA 'COMPOSIZIONE BASE' (QUELLE DELL'EXCEL) CHE SI DISPONE OLTRE I BORDI DI UNA CELLA
+
 TRASFORMARE TUTTE LE LASTRE 25x100 in 2 LASTRE 25x50
 TRASFORMARE TUTTE LE LASTRE 25x75 in 1 LASTRE 25x50 + 1 LASTRA 25x25
 */
@@ -502,3 +503,11 @@ export default defineComponent({
   border: 1px solid black;
 }
 </style>
+
+<i18n>
+{
+  "it": {
+    "computeLabel": "Calcola"
+  }
+}
+</i18n>
