@@ -16,40 +16,8 @@
           :lines="lines"
           @planDataChanged="planDataChanged($event)"
           @clearDraw="clearDraw"
+          @selectedBlockChanged="selectedBlockChanged($event)"
         />
-          
-        <input type="radio" id="25x25_50" name="draw-selection" value="25x25_50" v-model="drawSelection" checked>
-        <label for="25x25_50">25x25 H50</label>
-        <input type="radio" id="25x25_75" name="draw-selection" value="25x25_75" v-model="drawSelection">
-        <label for="25x25_50">25x25 H75</label>
-        <input type="radio" id="25x25_100" name="draw-selection" value="25x25_100" v-model="drawSelection">
-        <label for="25x25_100">25x25 H100</label>
-        <br/>
-        <input type="radio" id="25x50_50" name="draw-selection" value="25x50_50" v-model="drawSelection">
-        <label for="25x50_50">25x50 H50</label>
-        <input type="radio" id="25x50_75" name="draw-selection" value="25x50_75" v-model="drawSelection">
-        <label for="25x50_50">25x50 H75</label>
-        <input type="radio" id="25x50_100" name="draw-selection" value="25x50_100" v-model="drawSelection">
-        <label for="25x50_100">25x50 H100</label>
-        <br/>
-        <input type="radio" id="50x25_50" name="draw-selection" value="50x25_50" v-model="drawSelection">
-        <label for="50x25_50">50x25 H50</label>
-        <input type="radio" id="50x25_75" name="draw-selection" value="50x25_75" v-model="drawSelection">
-        <label for="50x25_50">50x25 H75</label>
-        <input type="radio" id="50x25_100" name="draw-selection" value="50x25_100" v-model="drawSelection">
-        <label for="50x25_100">50x25 H100</label>
-        <br/>
-        <input type="radio" id="50x50_50" name="draw-selection" value="50x50_50" v-model="drawSelection">
-        <label for="50x50_50">50x50 H50</label>
-        <input type="radio" id="50x50_75" name="draw-selection" value="50x50_75" v-model="drawSelection">
-        <label for="50x50_50">50x50 H75</label>
-        <input type="radio" id="50x50_100" name="draw-selection" value="50x50_100" v-model="drawSelection">
-        <label for="50x50_100">50x50 H100</label>
-        <br/>
-        <br/>
-        <input type="checkbox" name="singleSlabs" v-model="singleSlabs">
-        <label for="singleSlabs">Lastre altezza unica</label>
-        <br/>
         <br/>
         <button @click="getResults">CALCOLA</button>
       </div>
@@ -198,7 +166,7 @@ export default defineComponent({
         rows: 30,
         columns: 30
       } as DrawPlan,
-      drawSelection: "25x25_50" as string,
+      drawSelection: "" as string,
       sectionSize: 0 as number,
       selectedCellSections: {} as SelectedCellSections,
       singleSlabs: false,
@@ -272,6 +240,10 @@ export default defineComponent({
       data.forEach((x) => {
         this.removeSelectedCellSection(x.cellSectionId);
       });
+    },
+
+    selectedBlockChanged(data: string) {
+      this.drawSelection = data;
     },
 
     getResults() {
