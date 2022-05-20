@@ -12,7 +12,9 @@
         </table>
       </div>
       <div class="col-md-4 q-pl-md">
-        <RightBar />
+        <RightBar 
+          @planDataChanged="planDataChanged($event)"
+        />
           
         <input type="radio" id="25x25_50" name="draw-selection" value="25x25_50" v-model="drawSelection" checked>
         <label for="25x25_50">25x25 H50</label>
@@ -244,11 +246,17 @@ export default defineComponent({
   },
 
   methods: {
+    planDataChanged(data: { rows: number; columns: number; }) {
+      this.drawPlan.rows = data.rows;
+      this.drawPlan.columns = data.columns;
+      this.getCellSize();
+    },
+
     getCellSize() {
-      try{
+      try {
         const wrapperSize = (this.$refs.planWrapper as HTMLDivElement).offsetWidth;
         this.sectionSize = wrapperSize / (this.drawPlan.columns * 2);
-      }catch {
+      } catch {
         //
       }
     },
