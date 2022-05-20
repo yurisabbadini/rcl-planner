@@ -77,3 +77,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+.rcl-card {
+  width: 100%;
+}
+</style>

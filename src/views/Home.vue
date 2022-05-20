@@ -12,16 +12,7 @@
         </table>
       </div>
       <div class="col-md-4 q-pl-md">
-        <q-card class="rcl-card q-mb-md">
-          <q-card-section>
-            <div class="text-h6">{{ t('istruzioni') }}</div>
-            <ol>
-              <li>riga 1</li>
-              <li>riga 2</li>
-              <li>riga 3</li>
-            </ol>
-          </q-card-section>
-        </q-card>
+        <RightBar />
           
         <input type="radio" id="25x25_50" name="draw-selection" value="25x25_50" v-model="drawSelection" checked>
         <label for="25x25_50">25x25 H50</label>
@@ -170,6 +161,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Cell from "../components/Cell.vue";
+import RightBar from "../components/rightBar/RightBar.vue";
 import { DrawPlan, SelectedCellSections, ToggleParams, CellSectionCoordinates, ComputeResult, Point } from "../appTypes";
 import { useI18n } from "vue-i18n";
 
@@ -183,7 +175,8 @@ TRASFORMARE TUTTE LE LASTRE 25x75 in 1 LASTRE 25x50 + 1 LASTRA 25x25
 export default defineComponent({
   name: "Home",
   components: {
-    Cell
+    Cell,
+    RightBar
   },
   setup() {
     const { t } = useI18n({
@@ -2590,16 +2583,4 @@ export default defineComponent({
   margin: 0;
   border: 1px solid black;
 }
-
-.rcl-card {
-  width: 100%;
-}
 </style>
-
-<i18n>
-{
-  "it": {
-    "istruzioni": "Istruzioni"
-  }
-}
-</i18n>
