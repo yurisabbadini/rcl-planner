@@ -1853,7 +1853,7 @@ export function getPoints(selectedCellSections: SelectedCellSections, computeRes
     return computeResult;
 }
 
-export function getAccessori(selectedCellSections: SelectedCellSections, computeResult: ComputeResult): ComputeResult {
+export function getAccessori(singleSlab: boolean, selectedCellSections: SelectedCellSections, computeResult: ComputeResult): ComputeResult {
     computeResult.points.forEach((p) => {
         const cell = selectedCellSections[p.cellSectionId];
         const currentCellCoordinates = parseCellSectionId(p.cellSectionId);
@@ -2103,6 +2103,12 @@ export function getAccessori(selectedCellSections: SelectedCellSections, compute
                     computeResult.angolare += 2;
                 }
             }
+        }
+
+        if(singleSlab) {
+            computeResult.allinL = 0;
+            computeResult.allinZ = 0;
+            computeResult.piastraL = 0;
         }
     });
 

@@ -19,6 +19,9 @@
           @selectedBlockChanged="selectedBlockChanged($event)"
         />
         <br/>
+        <input type="checkbox" name="singleSlabs" v-model="singleSlabs">
+        <label for="singleSlabs">Lastre altezza unica</label>
+        <br/>
         <q-btn color="accent" :label="t('computeLabel')" @click="getResults" />
       </div>
     </div>
@@ -278,7 +281,7 @@ export default defineComponent({
       getBasamenti(this.selectedCellSections, this.computeResult);
       getLastre(this.singleSlabs, this.selectedCellSections, this.computeResult);
       getPoints(this.selectedCellSections, this.computeResult);
-      getAccessori(this.selectedCellSections, this.computeResult);
+      getAccessori(this.singleSlabs, this.selectedCellSections, this.computeResult);
     },
 
     removeSelectedCellSection(id: string) {
