@@ -1920,8 +1920,8 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
             } else if (p.type == "external") {
                 const heights: (number | null)[] = [cell.height];
                 if (p.position == "top-left") {
-                    heights.push(topCell?.height || null);
                     heights.push(leftCell?.height || null);
+                    heights.push(topCell?.height || null);
                 } else if (p.position == "top-right") {
                     heights.push(topCell?.height || null);
                     heights.push(rightCell?.height || null);
@@ -1929,65 +1929,109 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                     heights.push(bottomCell?.height || null);
                     heights.push(leftCell?.height || null);
                 } if (p.position == "bottom-right") {
-                    heights.push(bottomCell?.height || null);
                     heights.push(rightCell?.height || null);
+                    heights.push(bottomCell?.height || null);
                 }
-                if (heights.filter((h) => h == 50).length == 3) {
+                if (heights[0] == 50 && heights[1] == 50 && heights[2] == 50) {
                     computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 2;
+                    computeResult.squadrettaAncoraggio += 2;
+                } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 75) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 100) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 50 && heights[1] == 75 && heights[2] == 50) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 50 && heights[1] == 75 && heights[2] == 75) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 6;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 50 && heights[1] == 75 && heights[2] == 100) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 6;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 50 && heights[1] == 100 && heights[2] == 50) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 50 && heights[1] == 100 && heights[2] == 75) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 50 && heights[1] == 100 && heights[2] == 100) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 75 && heights[1] == 75 && heights[2] == 50) {
+                    computeResult.giuntoAlto += 2;
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1.5;
                     computeResult.angolare += 2;
                     computeResult.squadrettaAncoraggio += 1;
-                } else if (heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 75).length == 1) {
+                } else if (heights[0] == 75 && heights[1] == 75 && heights[2] == 75) {
                     computeResult.giuntoBasso += 1;
                     computeResult.tiranteOrizzontale += 2;
+                    computeResult.angolare += 3;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 75 && heights[1] == 75 && heights[2] == 100) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 2;
+                    computeResult.angolare += 5;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 50) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 50) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
                     computeResult.angolare += 4;
                     computeResult.squadrettaAncoraggio += 1;
                     computeResult.piastraL += 1;
-                } else if (heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 100).length == 1) {
+                } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 75) {
+                    computeResult.giuntoAlto += 2;
                     computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.angolare += 4;
-                    computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraL += 1;
-                } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 2) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.angolare += 6;
-                    computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraL += 2;
-                } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 1) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.angolare += 6;
-                    computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraL += 2;
-                } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 100).length == 2) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.angolare += 6;
-                    computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraL += 2;
-                } else if (heights.filter((h) => h == 75).length == 2 && heights.filter((h) => h == 100).length == 1) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 4;
-                    computeResult.angolare += 4;
-                    computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraAngolare += 1;
-                    computeResult.allinZ += 1;
-                    computeResult.allinL += 1;
-                } else if (heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 2) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 4;
-                    computeResult.angolare += 6;
-                    computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraAngolare += 1;
-                    computeResult.allinZ += 2;
-                } else if (heights.filter((h) => h == 75).length == 3) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 4;
+                    computeResult.tiranteOrizzontale += 1.5;
                     computeResult.angolare += 2;
                     computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraAngolare += 1;
+                } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 100) {
+                    computeResult.giuntoAlto += 2;
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1.5;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 75 && heights[1] == 100 && heights[2] == 100) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 2;
+                    computeResult.angolare += 6;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 75 && heights[1] == 100 && heights[2] == 75) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 2;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 75 && heights[1] == 100 && heights[2] == 75) {
+                    computeResult.giuntoAlto += 2;
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1.5;
+                    computeResult.angolare += 4;
+                    computeResult.squadrettaAncoraggio += 1;
                 }
             } else if (p.type == "central") {
                 const heights: (number | null)[] = [cell.height];
