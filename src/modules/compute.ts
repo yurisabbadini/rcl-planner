@@ -2036,8 +2036,8 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
             } else if (p.type == "central") {
                 const heights: (number | null)[] = [cell.height];
                 if (p.position == "top-left") {
-                    heights.push(topCell?.height || null);
                     heights.push(leftCell?.height || null);
+                    heights.push(topCell?.height || null);
                     heights.push(topLeftCell?.height || null);
                 } else if (p.position == "top-right") {
                     heights.push(topCell?.height || null);
@@ -2048,97 +2048,373 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                     heights.push(leftCell?.height || null);
                     heights.push(bottomLeftCell?.height || null);
                 } if (p.position == "bottom-right") {
-                    heights.push(bottomCell?.height || null);
                     heights.push(rightCell?.height || null);
+                    heights.push(bottomCell?.height || null);
                     heights.push(bottomRightCell?.height || null);
                 }
-                if (heights.filter((h) => h == 50).length == 4) {
+                if (heights[0] == 50 && heights[1] == 50 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.tiranteObliquoH50 += 2;
                     computeResult.elementoCrocera += 2;
-                } else if (heights.filter((h) => h == 75).length == 4) {
-                    computeResult.elementoCrocera += 2;
-                } else if (heights.filter((h) => h == 100).length == 4) {
-                    computeResult.elementoCrocera += 2;
-                } else if (heights.filter((h) => h == 50).length == 3 && heights.filter((h) => h == 75).length == 1) {
-                    computeResult.tiranteObliquoH50 += 4;
+                } else if (heights[0] == 75 && heights[1] == 75 && heights[2] == 75 && heights[3] == 75) {
+                    computeResult.tiranteObliquoH50 += 2;
                     computeResult.tiranteObliquoH75 += 2;
-                    computeResult.piantana += 1;
-                    computeResult.angolare += 2;
                     computeResult.elementoCrocera += 2;
-                } else if (heights.filter((h) => h == 50).length == 3 && heights.filter((h) => h == 100).length == 1) {
-                    computeResult.tiranteObliquoH50 += 4;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 100 && heights[3] == 100) {
+                    computeResult.tiranteObliquoH50 += 2;
                     computeResult.tiranteObliquoH100 += 2;
-                    computeResult.piantana += 1;
-                    computeResult.angolare += 2;
                     computeResult.elementoCrocera += 2;
-                } else if (heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 1) {
-                    computeResult.giuntoAlto += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.tiranteObliquoH50 += 4;
+                } else if (heights[0] == 50 && heights[1] == 75 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.tiranteObliquoH50 += 2;
                     computeResult.tiranteObliquoH75 += 1;
-                    computeResult.tiranteObliquoH100 += 2;
                     computeResult.piantana += 1;
                     computeResult.angolare += 2;
-                    computeResult.allinL += 1;
-                    computeResult.allinZ += 1;
-                } else if (heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 75).length == 2) {
+                } else if (heights[0] == 50 && heights[1] == 100 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.tiranteObliquoH50 += 2;
+                    computeResult.tiranteObliquoH100 += 1;
+                    computeResult.piantana += 1;
+                    computeResult.angolare += 2;
+                } else if (heights[0] == 50 && heights[1] == 100 && heights[2] == 50 && heights[3] == 75) {
                     computeResult.giuntoAlto += 2;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.piantana += 1;
-                } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 3) {
-                    computeResult.tiranteOrizzontale += 4;
-                    computeResult.tiranteObliquoH50 += 4;
-                    computeResult.tiranteObliquoH75 += 2;
-                    computeResult.piantana += 1;
-                    computeResult.angolare += 2;
-                } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 2 && heights.filter((h) => h == 100).length == 1) {
-                    computeResult.tiranteOrizzontale += 4;
-                    computeResult.tiranteObliquoH50 += 4;
-                    computeResult.tiranteObliquoH75 += 2;
-                    computeResult.tiranteObliquoH100 += 2;
-                    computeResult.piantana += 1;
-                    computeResult.angolare += 4;
-                    computeResult.piastraL += 4;
-                } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 2) {
-                    computeResult.giuntoAlto += 1;
-                    computeResult.tiranteOrizzontale += 4;
-                    computeResult.tiranteObliquoH50 += 4;
+                    computeResult.giuntoBasso += 0;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.tiranteObliquo += 0;
+                    computeResult.tiranteObliquoH50 += 2;
                     computeResult.tiranteObliquoH75 += 1;
                     computeResult.tiranteObliquoH100 += 1;
                     computeResult.piantana += 1;
                     computeResult.angolare += 2;
-                    computeResult.allinL += 2;
-                } else if (heights.filter((h) => h == 75).length == 2 && heights.filter((h) => h == 100).length == 2) {
-                    computeResult.giuntoAlto += 2;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.tiranteObliquoH50 += 4;
+                    computeResult.squadrettaAncoraggio += 0;
+                    computeResult.elementoCrocera += 0;
+                    computeResult.spinottoCorto += 0;
+                    computeResult.piastraLineare += 0;
+                    computeResult.piastraAngolare += 0;
+                    computeResult.piastraL += 0;
+                    computeResult.allinZ += 0;
+                    computeResult.allinL += 0;
+                } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 75 && heights[3] == 50) {
+                    computeResult.giuntoAlto += 0;
+                    computeResult.giuntoBasso += 0;
+                    computeResult.tiranteOrizzontale += 0;
+                    computeResult.tiranteObliquo += 0;
+                    computeResult.tiranteObliquoH50 += 2;
                     computeResult.tiranteObliquoH75 += 1;
-                    computeResult.tiranteObliquoH100 += 1;
-                    computeResult.piantana += 1;
-                } else if (heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 100).length == 2) {
-                    computeResult.giuntoAlto += 2;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.tiranteObliquoH50 += 4;
-                    computeResult.tiranteObliquoH100 += 1;
-                    computeResult.piantana += 1;
-                } else if (heights.filter((h) => h == 50).length == 2 && heights.filter((h) => h == 100).length == 2) {
-                    computeResult.giuntoAlto += 2;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.tiranteObliquoH50 += 4;
-                    computeResult.tiranteObliquoH100 += 1;
-                    computeResult.piantana += 1;
-                } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 100).length == 3) {
-                    computeResult.tiranteOrizzontale += 4;
-                    computeResult.tiranteObliquoH50 += 4;
-                    computeResult.tiranteObliquoH100 += 2;
+                    computeResult.tiranteObliquoH100 += 0;
                     computeResult.piantana += 1;
                     computeResult.angolare += 2;
-                } else if (heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 3) {
-                    computeResult.tiranteOrizzontale += 4;
-                    computeResult.tiranteObliquoH50 += 4;
-                    computeResult.tiranteObliquoH75 += 1;
-                    computeResult.tiranteObliquoH100 += 3;
-                    computeResult.piantana += 1;
-                    computeResult.angolare += 2;
+                    computeResult.squadrettaAncoraggio += 0;
+                    computeResult.elementoCrocera += 0;
+                    computeResult.spinottoCorto += 0;
+                    computeResult.piastraLineare += 0;
+                    computeResult.piastraAngolare += 0;
+                    computeResult.piastraL += 0;
+                    computeResult.allinZ += 0;
+                    computeResult.allinL += 0;
+                } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 50 && heights[3] == 75) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 0;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 1;
+                    computeResult.tiranteObliquoH100    += 0;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 50 && heights[3] == 100) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 0;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 100 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 0;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 100 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 0;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 75 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 2;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 1;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0.5;
+                    computeResult.tiranteObliquoH100    += 0;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 0;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 0;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 1;
+                    computeResult.tiranteObliquoH100    += 0;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 75 && heights[1] == 75 && heights[2] == 75 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 1;
+                    computeResult.tiranteObliquoH100    += 0;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 75 && heights[1] == 75 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 2;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 1;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0.5;
+                    computeResult.tiranteObliquoH100    += 0;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 0;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 50 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 0;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 75 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 2;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 1;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 1;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 75 && heights[2] == 75 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0.5;
+                    computeResult.tiranteObliquoH100    += 0.5;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 4;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 75 && heights[2] == 100 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 2;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0.5;
+                    computeResult.tiranteObliquoH100    += 0.5;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 3;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 1;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 50 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 2;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 1;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 0;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 75 && heights[3] == 75) {
+                    computeResult.giuntoAlto            += 2;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 1;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 1;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 0;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 75 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 2;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0.5;
+                    computeResult.tiranteObliquoH100    += 0.5;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 3;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 1;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 100 && heights[3] == 50) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 1;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 100 && heights[3] == 75) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 1;
+                    computeResult.tiranteObliquoH100    += 2;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
                 }
             }
         }
