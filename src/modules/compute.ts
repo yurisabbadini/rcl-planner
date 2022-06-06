@@ -1881,47 +1881,41 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                 if (heights.filter((h) => h == 50).length == 2) {
                     computeResult.giuntoAlto += 1;
                     computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.tiranteOrizzontale += 0.5;
                 } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 75).length == 1) {
+                    computeResult.giuntoAlto += 1;
                     computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.tiranteOrizzontale += 0.5;
                     computeResult.angolare += 2;
-                    computeResult.piastraL += 1;
                 } else if (heights.filter((h) => h == 50).length == 1 && heights.filter((h) => h == 100).length == 1) {
+                    computeResult.giuntoAlto += 1;
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 0.5;
+                    computeResult.angolare += 2;
+                } else if (heights.filter((h) => h == 75).length == 2) {
+                    computeResult.giuntoAlto += 2;
+                    computeResult.giuntoBasso += 1;
+                    computeResult.tiranteOrizzontale += 1;
+                } else if (heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 1) {
+                    computeResult.giuntoAlto += 2;
                     computeResult.giuntoBasso += 1;
                     computeResult.tiranteOrizzontale += 1;
                     computeResult.angolare += 2;
-                    computeResult.piastraL += 1;
-                } else if (heights.filter((h) => h == 75).length == 2) {
-                    computeResult.giuntoAlto += 1;
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.piastraLineare += 1;
-                } else if (heights.filter((h) => h == 75).length == 1 && heights.filter((h) => h == 100).length == 1) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.angolare += 2;
-                    computeResult.piastraLineare += 1;
-                    computeResult.allinZ += 1;
-                    computeResult.allinL += 1;
                 } else if (heights.filter((h) => h == 100).length == 2) {
-                    computeResult.giuntoAlto += 1;
+                    computeResult.giuntoAlto += 2;
                     computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 2;
-                    computeResult.piastraLineare += 1;
+                    computeResult.tiranteOrizzontale += 1;
                 }
             } else if (p.type == "internal") {
                 if (cell.height == 50) {
                     computeResult.angolare += 2;
                     computeResult.squadrettaAncoraggio += 1;
                 } else if (cell.height == 75) {
-                    computeResult.angolare += 2;
+                    computeResult.angolare += 3;
                     computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraAngolare += 1;
                 } else if (cell.height == 100) {
-                    computeResult.angolare += 2;
+                    computeResult.angolare += 3;
                     computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraAngolare += 1;
                 }
             } else if (p.type == "external") {
                 const heights: (number | null)[] = [cell.height];
