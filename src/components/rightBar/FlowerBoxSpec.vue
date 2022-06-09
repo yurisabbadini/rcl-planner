@@ -2,11 +2,20 @@
   <q-card class="rcl-card q-mb-md">
     <q-card-section>
         <div class="text-h6">{{ t('flowerBoxSpecTitle') }}</div>
-        <q-select filled v-model="line" :options="lines" :label="t('flowerBoxLine')" stack-label dense options-dense emit-value map-options>
+        <q-select filled v-model="line" :options="lines" :label="t('flowerBoxLine')" stack-label dense options-dense emit-value map-options option-value="id" option-label="name">
           <template v-slot:option="scope">
             <q-item v-bind="scope.itemProps">
               <q-item-section>
-                <q-item-label>• {{ scope.opt.label }}</q-item-label>
+                <q-item-label>{{ scope.opt.name }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+        <q-select filled v-model="finish" :options="finishings" :label="t('flowerBoxFinishing')" stack-label dense options-dense emit-value map-options option-value="id" option-label="description">
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section>
+                <q-item-label>{{ scope.opt.description }}</q-item-label>
               </q-item-section>
             </q-item>
           </template>
@@ -46,17 +55,21 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FlowerBoxFinishing } from '~/src/appTypes';
 import BlockTemplate from "./BlockTemplate.vue";
+import { getFinishing } from "../../modules/repository";
 
 export default defineComponent({
   name: 'FlowerBoxSpec',
-  emits: ["selectedBlockChanged"],
+  emits: ["selectedBlockChanged", "lineChanged", "finishChanged"],
   components: {
     BlockTemplate
   },
   data () {
       return {
         line: "",
+        finish: "",
+        finishings: [] as FlowerBoxFinishing[],
         type: "standard" as "standard" | "skyline",
         selectedBlock: {},
         standardBlocks: [
@@ -194,7 +207,17 @@ export default defineComponent({
         this.$emit("selectedBlockChanged", newVal.value);
       },
       deep: true
-    }
+    },
+    line: {
+      handler: function (newVal) {
+        this.finish = "";
+        this.finishings = getFinishing(newVal, "50x50");
+        this.finish = this.finishings[0]?.id || "";
+        this.$emit("lineChanged", newVal);
+        this.$emit("finishChanged", this.finish);
+      },
+      deep: true
+    },
   }
 })
 </script>
@@ -204,6 +227,7 @@ export default defineComponent({
   "it": {
     "flowerBoxSpecTitle": "Specifiche fioriera",
     "flowerBoxLine": "Linea",
+    "flowerBoxFinishing": "Finitura",
     "blocks": "Blocco",
   }
 }

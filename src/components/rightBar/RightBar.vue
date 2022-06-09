@@ -1,7 +1,7 @@
 <template>
   <Instructions />
   <PlanSettings @dataChanged="planDataChanged($event)" @clearDraw="clearDraw"/>
-  <FlowerBoxSpec :lines="lines" @selectedBlockChanged="selectedBlockChanged($event)"/>
+  <FlowerBoxSpec :lines="lines" @selectedBlockChanged="selectedBlockChanged($event)" @lineChanged="lineChanged($event)" @finishChanged="finishChanged($event)"/>
 </template>
 
 <script lang="ts">
@@ -13,7 +13,7 @@ import FlowerBoxSpec from "./FlowerBoxSpec.vue";
 
 export default defineComponent({
   name: 'RightBar',
-  emits: ["planDataChanged", "clearDraw", "selectedBlockChanged"],
+  emits: ["planDataChanged", "clearDraw", "selectedBlockChanged", "lineChanged", "finishChanged"],
   components: {
     Instructions,
     PlanSettings,
@@ -29,6 +29,12 @@ export default defineComponent({
     },
     selectedBlockChanged(data: string) {
       this.$emit("selectedBlockChanged", data);
+    },
+    lineChanged(data: string) {
+      this.$emit("lineChanged", data);
+    },
+    finishChanged(data: string) {
+      this.$emit("finishChanged", data);
     }
   }
 })

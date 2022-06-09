@@ -17,12 +17,15 @@
           @planDataChanged="planDataChanged($event)"
           @clearDraw="clearDraw"
           @selectedBlockChanged="selectedBlockChanged($event)"
+          @lineChanged="lineChanged($event)"
+          @finishChanged="finishChanged($event)"
         />
         <br/>
         <input type="checkbox" name="singleSlabs" v-model="singleSlabs">
         <label for="singleSlabs">Lastre altezza unica</label>
         <br/>
         <q-btn color="accent" :label="t('computeLabel')" @click="getResults" />
+        <h3>{{price.toFixed(2)}} &euro;</h3>
       </div>
     </div>
     <div  class="row">
@@ -140,7 +143,7 @@ import RightBar from "../components/rightBar/RightBar.vue";
 import { DrawPlan, SelectedCellSections, ToggleParams, ComputeResult, FlowerBoxLine } from "../appTypes";
 import { useI18n } from "vue-i18n";
 import { cellSectionParsed, checkIfSquare, checkIfHBlock, checkIfVBlock, getCellSectionId, getBasamenti, getLastre, getPoints, getAccessori } from "../modules/compute";
-import { getLines } from "../modules/repository";
+import { getLines, getFinishing, getAccessories, getBottoms } from "../modules/repository";
 
 /*
 SEGNARE COME ROSSE CASELLE DEL DISEGNO E IMPEDIRE IL CALCOLA SE CI SONO ERRORI
@@ -163,6 +166,8 @@ export default defineComponent({
   data () {
     return {
       lines: [] as FlowerBoxLine[],
+      line: "",
+      finish: "",
       drawPlan: { 
         rows: 30,
         columns: 30
@@ -199,8 +204,9 @@ export default defineComponent({
         tiranteObliquoH50: 0,
         tiranteObliquoH75: 0,
         tiranteOrizzontale: 0,
-        points: []
-      } as ComputeResult
+        points: [],
+      } as ComputeResult,
+      price: 0 as number
     }
   },
   mounted () {
@@ -225,6 +231,14 @@ export default defineComponent({
       this.drawPlan.rows = data.rows;
       this.drawPlan.columns = data.columns;
       this.getCellSize();
+    },
+
+    lineChanged(data: string) {
+      this.line = data;
+    },
+
+    finishChanged(data: string) {
+      this.finish = data;
     },
 
     getCellSize() {
@@ -282,6 +296,50 @@ export default defineComponent({
       getLastre(this.singleSlabs, this.selectedCellSections, this.computeResult);
       getPoints(this.selectedCellSections, this.computeResult);
       getAccessori(this.singleSlabs, this.selectedCellSections, this.computeResult);
+
+      const bottom25x25 = Number(getBottoms(this.line, "25x25")[0]?.price || 0);
+      const bottom25x50 = Number(getBottoms(this.line, "25x50")[0]?.price || 0);
+      const bottom50x50 = Number(getBottoms(this.line, "50x50")[0]?.price || 0);
+
+      const finishings25x25 = Number(getFinishing(this.line, "25x25")[0]?.price || 0);
+      const finishings25x50 = Number(getFinishing(this.line, "25x50")[0]?.price || 0);
+      const finishings25x75 = Number(getFinishing(this.line, "25x75")[0]?.price || 0);
+      const finishings25x100 = Number(getFinishing(this.line, "25x100")[0]?.price || 0);
+      const finishings50x50 = Number(getFinishing(this.line, "50x50")[0]?.price || 0);
+      const finishings50x75 = Number(getFinishing(this.line, "50x75")[0]?.price || 0);
+      const finishings50x100 = Number(getFinishing(this.line, "50x100")[0]?.price || 0);
+
+      const accessories = getAccessories(this.line); 
+
+      this.price = 0;
+      this.price += this.computeResult.B25x25 * bottom25x25;
+      this.price += this.computeResult.B25x50 * bottom25x50;
+      this.price += this.computeResult.B50x50 * bottom50x50;
+      this.price += this.computeResult.L25x25 * finishings25x25;
+      this.price += this.computeResult.L25x50 * finishings25x50;
+      this.price += this.computeResult.L25x75 * finishings25x75;
+      this.price += this.computeResult.L25x100 * finishings25x100;
+      this.price += this.computeResult.L50x50 * finishings50x50;
+      this.price += this.computeResult.L50x75 * finishings50x75;
+      this.price += this.computeResult.L50x100 * finishings50x100;
+
+      const line = this.lines.find((x) => x.id == this.line);
+      this.price += this.computeResult.allinL * Number(accessories.find((x) => x.id == "allinL")?.price || 0);
+      this.price += this.computeResult.allinZ * Number(accessories.find((x) => x.id == "allinZ")?.price || 0);
+      this.price += this.computeResult.angolare * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "angolare_gres" : "angolare"))?.price || 0);
+      this.price += this.computeResult.elementoCrocera * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "crocera_gres" : "crocera"))?.price || 0);
+      this.price += this.computeResult.giuntoAlto * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "giuntoAlto_gres" : "giuntoAlto"))?.price || 0);
+      this.price += this.computeResult.giuntoBasso * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "giuntoBasso_gres" : "giuntoBasso"))?.price || 0);
+      this.price += this.computeResult.piantana * Number(accessories.find((x) => x.id == "piantana")?.price || 0);
+      this.price += this.computeResult.piastraAngolare * Number(accessories.find((x) => x.id == "piastraAngolare")?.price || 0);
+      this.price += this.computeResult.piastraL * Number(accessories.find((x) => x.id == "piastraL")?.price || 0);
+      this.price += this.computeResult.piastraLineare * Number(accessories.find((x) => x.id == "piastraLineare")?.price || 0);
+      this.price += this.computeResult.spinottoCorto * Number(accessories.find((x) => x.id == "spinottoCorto")?.price || 0);
+      this.price += this.computeResult.squadrettaAncoraggio * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "squadrettaAncoraggio_gres" : "squadrettaAncoraggio"))?.price || 0);
+      this.price += this.computeResult.tiranteObliquoH100 * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "tiranteObliquo100_gres45" : "tiranteObliquo100"))?.price || 0);
+      this.price += this.computeResult.tiranteObliquoH50 * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "tiranteObliquo50_gres45" : "tiranteObliquo50"))?.price || 0);
+      this.price += this.computeResult.tiranteObliquoH75 * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "tiranteObliquo75_gres45" : "tiranteObliquo75"))?.price || 0);
+      this.price += this.computeResult.tiranteOrizzontale * Number(accessories.find((x) => x.id == (line?.name.toLowerCase().includes("gres") ? "tiranteOrizzontale_gres45" : "tiranteOrizzontale"))?.price || 0);
     },
 
     removeSelectedCellSection(id: string) {
