@@ -1870,13 +1870,29 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
             if (p.type == "linear") {
                 const heights: (number | null)[] = [cell.height];
                 if (p.position == "top-left") {
-                    heights.push(leftCell?.height || null);
+                    if(leftCell) {
+                        heights.push(leftCell?.height);
+                    } else if(topCell) {
+                        heights.push(topCell?.height);
+                    }
                 } else if (p.position == "top-right") {
-                    heights.push(rightCell?.height || null);
+                    if(rightCell) {
+                        heights.push(rightCell?.height);
+                    } else if(topCell) {
+                        heights.push(topCell?.height);
+                    }
                 } else if (p.position == "bottom-left") {
-                    heights.push(leftCell?.height || null);
+                    if(leftCell) {
+                        heights.push(leftCell?.height);
+                    } else if(bottomCell) {
+                        heights.push(bottomCell?.height);
+                    }
                 } if (p.position == "bottom-right") {
-                    heights.push(rightCell?.height || null);
+                    if(rightCell) {
+                        heights.push(rightCell?.height);
+                    } else if(bottomCell) {
+                        heights.push(bottomCell?.height);
+                    }
                 }
                 if (heights.filter((h) => h == 50).length == 2) {
                     computeResult.giuntoAlto += 1;

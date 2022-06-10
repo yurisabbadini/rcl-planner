@@ -111,23 +111,6 @@ export const lines = [
         "quoteOffset": 0.02
     },
     {
-        "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-        "name": "• PLASTICA 25",
-        "heights": [
-            50,
-            75,
-            100
-        ],
-        "isNl": false,
-        "volumeH50": "70",
-        "volumeH75": "105",
-        "volumeH100": "140",
-        "volumeH60": 0,
-        "volumeH90": 0,
-        "isRect": true,
-        "quoteOffset": 0.04
-    },
-    {
         "id": "82b629fd-7a3e-4d7a-9b8a-4d7a7f1f5f62",
         "name": "• GRES 30",
         "heights": [
@@ -1926,23 +1909,6 @@ export const accessories = [
                 "quoteOffset": 0.04
             },
             {
-                "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-                "name": "PLASTICA 25",
-                "heights": [
-                    50,
-                    75,
-                    100
-                ],
-                "isNl": false,
-                "volumeH50": "70",
-                "volumeH75": "105",
-                "volumeH100": "140",
-                "volumeH60": 0,
-                "volumeH90": 0,
-                "isRect": true,
-                "quoteOffset": 0.04
-            },
-            {
                 "id": "d6d2bdd5-b93b-4fd7-9a13-3311e987198f",
                 "name": "PIETRA RICOSTRUITA \"LE PIETRE\"",
                 "heights": [
@@ -2066,23 +2032,6 @@ export const accessories = [
                 "quoteOffset": 0.04
             },
             {
-                "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-                "name": "PLASTICA 25",
-                "heights": [
-                    50,
-                    75,
-                    100
-                ],
-                "isNl": false,
-                "volumeH50": "70",
-                "volumeH75": "105",
-                "volumeH100": "140",
-                "volumeH60": 0,
-                "volumeH90": 0,
-                "isRect": true,
-                "quoteOffset": 0.04
-            },
-            {
                 "id": "1bc763a5-2e1c-4202-bf83-898b52d07952",
                 "name": "Metallo 25",
                 "heights": [
@@ -2197,23 +2146,6 @@ export const accessories = [
                 "quoteOffset": 0.04
             },
             {
-                "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-                "name": "PLASTICA 25",
-                "heights": [
-                    50,
-                    75,
-                    100
-                ],
-                "isNl": false,
-                "volumeH50": "70",
-                "volumeH75": "105",
-                "volumeH100": "140",
-                "volumeH60": 0,
-                "volumeH90": 0,
-                "isRect": true,
-                "quoteOffset": 0.04
-            },
-            {
                 "id": "1bc763a5-2e1c-4202-bf83-898b52d07952",
                 "name": "Metallo 25",
                 "heights": [
@@ -2325,23 +2257,6 @@ export const accessories = [
                 "volumeH75": "",
                 "volumeH100": "",
                 "volumeH60": "78",
-                "quoteOffset": 0.04
-            },
-            {
-                "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-                "name": "PLASTICA 25",
-                "heights": [
-                    50,
-                    75,
-                    100
-                ],
-                "isNl": false,
-                "volumeH50": "70",
-                "volumeH75": "105",
-                "volumeH100": "140",
-                "volumeH60": 0,
-                "volumeH90": 0,
-                "isRect": true,
                 "quoteOffset": 0.04
             },
             {
@@ -2470,23 +2385,6 @@ export const accessories = [
                 "volumeH50": 0,
                 "volumeH75": 0,
                 "volumeH100": 0,
-                "volumeH60": 0,
-                "volumeH90": 0,
-                "isRect": true,
-                "quoteOffset": 0.04
-            },
-            {
-                "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-                "name": "PLASTICA 25",
-                "heights": [
-                    50,
-                    75,
-                    100
-                ],
-                "isNl": false,
-                "volumeH50": "70",
-                "volumeH75": "105",
-                "volumeH100": "140",
                 "volumeH60": 0,
                 "volumeH90": 0,
                 "isRect": true,
@@ -5436,256 +5334,6 @@ export const finishings = [
         "cost": "5.54"
     },
     {
-        "id": "526bd12f-0e45-476d-8a90-91e3f8d46a7f",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": true,
-        "description": "SIMILCOTTO",
-        "price": "37",
-        "weight": "2.3",
-        "size": "50x50",
-        "isRect": true,
-        "cost": "5.90"
-    },
-    {
-        "id": "aea8baa7-eb6d-4984-9da9-a69d3aedc2d3",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "SIMILCOTTO",
-        "price": "27",
-        "weight": "1.15",
-        "size": "25x50",
-        "isRect": true,
-        "cost": "5.10"
-    },
-    {
-        "id": "4e131def-dfaa-470d-8c41-6bff0d5f3672",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "GRIGIO PERLA",
-        "price": "37",
-        "weight": "2.3",
-        "size": "50x50",
-        "isRect": true,
-        "cost": "5.90"
-    },
-    {
-        "id": "f04af5ce-4eb6-47ec-b815-69276505f24a",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "GRIGIO PERLA",
-        "price": "27",
-        "weight": "1.15",
-        "size": "25x50",
-        "isRect": true,
-        "cost": "5.10"
-    },
-    {
-        "id": "fc6c8ce1-322b-4ba5-bf96-6c8c4806f260",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "ANTRACITE",
-        "price": "37",
-        "weight": "2.3",
-        "size": "50x50",
-        "isRect": true,
-        "cost": "5.90"
-    },
-    {
-        "id": "9a71630d-e7bd-4235-8d4f-d77220edbaf0",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "ANTRACITE",
-        "price": "27",
-        "weight": "1.15",
-        "size": "25x50",
-        "isRect": true,
-        "cost": "5.10"
-    },
-    {
-        "id": "1c6342a5-aa24-4fd6-92b9-789d30dbe16e",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "TORTORA",
-        "price": "37",
-        "weight": "2.3",
-        "size": "50x50",
-        "isRect": true,
-        "cost": "5.90"
-    },
-    {
-        "id": "15b51080-4ac2-4244-b5ae-2caa30f57b84",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "TORTORA",
-        "price": "27",
-        "weight": "1.15",
-        "size": "25x50",
-        "isRect": true,
-        "cost": "5.10"
-    },
-    {
-        "id": "7dd43f96-6644-44ce-a858-5a017a5c0a0f",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "BIANCO",
-        "price": "37",
-        "weight": "2.3",
-        "size": "50x50",
-        "isRect": true,
-        "cost": "5.90"
-    },
-    {
-        "id": "2b879a5b-f555-4631-ac27-d0574b7d1932",
-        "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
-            "heights": [
-                50,
-                75,
-                100
-            ],
-            "isNl": false,
-            "volumeH50": "70",
-            "volumeH75": "105",
-            "volumeH100": "140",
-            "volumeH60": 0,
-            "volumeH90": 0
-        },
-        "isVisible": false,
-        "description": "BIANCO",
-        "price": "27",
-        "weight": "1.15",
-        "size": "25x50",
-        "isRect": true,
-        "cost": "5.10"
-    },
-    {
         "id": "6f174855-770f-4973-9d51-d2a760ce585b",
         "line": {
             "id": "82b629fd-7a3e-4d7a-9b8a-4d7a7f1f5f62",
@@ -5729,7 +5377,7 @@ export const finishings = [
         "description": "METALLO (COLORE RAL A SCELTA)",
         "price": "215",
         "weight": "7.1",
-        "size": "75x50",
+        "size": "50x75",
         "cost": "46.13"
     },
     {
@@ -5753,7 +5401,7 @@ export const finishings = [
         "description": "METALLO CORTEN",
         "price": "232",
         "weight": "7.1",
-        "size": "75x50",
+        "size": "50x75",
         "cost": "47.64"
     },
     {
@@ -5777,7 +5425,7 @@ export const finishings = [
         "description": "METALLO (COLORE RAL A SCELTA)",
         "price": "280",
         "weight": "9.4",
-        "size": "100x50",
+        "size": "50x100",
         "cost": "62.34"
     },
     {
@@ -5801,7 +5449,7 @@ export const finishings = [
         "description": "METALLO CORTEN",
         "price": "302",
         "weight": "9.4",
-        "size": "100x50",
+        "size": "50x100",
         "cost": "61.09"
     },
     {
@@ -5882,7 +5530,7 @@ export const finishings = [
         "description": "METALLO (COLORE RAL A SCELTA)",
         "price": "215",
         "weight": "7",
-        "size": "75x50",
+        "size": "50x75",
         "cost": 0
     },
     {
@@ -5909,7 +5557,7 @@ export const finishings = [
         "description": "METALLO (COLORE RAL A SCELTA)",
         "price": "280",
         "weight": "9",
-        "size": "100x50",
+        "size": "50x100",
         "cost": 0
     },
     {
@@ -5990,7 +5638,7 @@ export const finishings = [
         "description": "METALLO CORTEN",
         "price": "232",
         "weight": "7",
-        "size": "75x50",
+        "size": "50x75",
         "cost": 0
     },
     {
@@ -6017,7 +5665,7 @@ export const finishings = [
         "description": "METALLO CORTEN",
         "price": "302",
         "weight": "9",
-        "size": "100x50",
+        "size": "50x100",
         "cost": 0
     },
     {
@@ -6218,7 +5866,7 @@ export const finishings = [
         "description": "BIANCO",
         "price": "64",
         "weight": "2.9",
-        "size": "75x50",
+        "size": "50x75",
         "cost": 0
     },
     {
@@ -6243,7 +5891,7 @@ export const finishings = [
         "description": "GRIGIO PERLA",
         "price": "64",
         "weight": "2.9",
-        "size": "75x50",
+        "size": "50x75",
         "cost": 0
     },
     {
@@ -6268,7 +5916,7 @@ export const finishings = [
         "description": "ANTRACITE",
         "price": "64",
         "weight": "2.9",
-        "size": "75x50",
+        "size": "50x75",
         "cost": 0
     },
     {
@@ -6293,7 +5941,7 @@ export const finishings = [
         "description": "TORTORA",
         "price": "64",
         "weight": "2.9",
-        "size": "75x50",
+        "size": "50x75",
         "cost": 0
     },
     {
@@ -6318,7 +5966,7 @@ export const finishings = [
         "description": "BIANCO",
         "price": "74",
         "weight": "3.8",
-        "size": "100x50",
+        "size": "50x100",
         "cost": 0
     },
     {
@@ -6343,7 +5991,7 @@ export const finishings = [
         "description": "GRIGIO PERLA",
         "price": "74",
         "weight": "3.8",
-        "size": "100x50",
+        "size": "50x100",
         "cost": 0
     },
     {
@@ -6368,7 +6016,7 @@ export const finishings = [
         "description": "ANTRACITE",
         "price": "74",
         "weight": "3.8",
-        "size": "100x50",
+        "size": "50x100",
         "cost": 0
     },
     {
@@ -6393,7 +6041,7 @@ export const finishings = [
         "description": "TORTORA",
         "price": "74",
         "weight": "3.8",
-        "size": "100x50",
+        "size": "50x100",
         "cost": 0
     },
     {
@@ -6418,7 +6066,7 @@ export const finishings = [
         "description": "SIMILCOTTO",
         "price": "74",
         "weight": "3.8",
-        "size": "100x50",
+        "size": "50x100",
         "cost": 0
     },
     {
@@ -6443,7 +6091,7 @@ export const finishings = [
         "description": "SIMILCOTTO",
         "price": "64",
         "weight": "2.9",
-        "size": "75x50",
+        "size": "50x75",
         "cost": 0
     }
 ];
@@ -6589,8 +6237,8 @@ export const bottoms = [
     {
         "id": "6784e65d-6d27-4ead-86e1-dda4dba3cf6b",
         "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
+            "id": "1",
+            "name": "Plastica",
             "heights": [
                 50,
                 75,
@@ -6633,8 +6281,8 @@ export const bottoms = [
     {
         "id": "e7ea5908-0ece-48c6-9331-1b84cb69e181",
         "line": {
-            "id": "af4e9342-799a-437f-95f9-271e56d023c9",
-            "name": "Plastica 25",
+            "id": "1",
+            "name": "Plastica",
             "heights": [
                 50,
                 75,
