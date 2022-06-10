@@ -2860,6 +2860,25 @@ export const finishings = [
         "cost": "5.1"
     },
     {
+        "id": "d5932329-166d-41b6-9a81-bd273dd62fb9",
+        "line": {
+            "id": "1",
+            "name": "Plastica",
+            "heights": [
+                50,
+                75,
+                100
+            ],
+            "isNl": false
+        },
+        "description": "GRIGIO PERLA",
+        "price": "27",
+        "weight": "1.15",
+        "size": "25x25",
+        "isVisible": true,
+        "cost": "5.1"
+    },
+    {
         "id": "62b85cd5-2483-4ee2-935c-d32af7b77fcf",
         "line": {
             "id": "1",
@@ -6298,7 +6317,7 @@ export const bottoms = [
             "quoteOffset": 0.4
         },
         "description": "Basamento",
-        "size": "25X50",
+        "size": "25x50",
         "price": "27",
         "weight": "1",
         "cost": "5.10"

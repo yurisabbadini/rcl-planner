@@ -298,11 +298,8 @@ export default defineComponent({
       getAccessori(this.singleSlabs, this.selectedCellSections, this.computeResult);
 
       const bottom25x25 = Number(getBottoms(this.line, "25x25")[0]?.price || 0);
-      alert(bottom25x25);
       const bottom25x50 = Number(getBottoms(this.line, "25x50")[0]?.price || 0);
-      alert(bottom25x50);
       const bottom50x50 = Number(getBottoms(this.line, "50x50")[0]?.price || 0);
-      alert(bottom50x50);
 
       const finishings25x25 = Number(getFinishing(this.line, "25x25")[0]?.price || 0);
       const finishings25x50 = Number(getFinishing(this.line, "25x50")[0]?.price || 0);
