@@ -11,15 +11,6 @@
             </q-item>
           </template>
         </q-select>
-        <q-select filled v-model="finish" :options="finishings" :label="t('flowerBoxFinishing')" stack-label dense options-dense emit-value map-options option-value="id" option-label="description">
-          <template v-slot:option="scope">
-            <q-item v-bind="scope.itemProps">
-              <q-item-section>
-                <q-item-label>{{ scope.opt.description }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
         <div class="q-gutter-sm">
           <div class="q-gutter-sm">
             <q-radio dense v-model="type" val="standard" label="Altezza Standard 50" />
@@ -47,6 +38,15 @@
               </q-item>
             </template>
           </q-select>
+          <q-select class="q-mt-md" filled v-model="finish" :options="finishings" :label="t('flowerBoxFinishing')" stack-label dense options-dense emit-value map-options option-value="id" option-label="description">
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.description }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </div>
     </q-card-section>
   </q-card>
@@ -55,7 +55,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { FlowerBoxFinishing } from '~/src/appTypes';
+import { FlowerBoxFinishing } from '../../appTypes';
 import BlockTemplate from "./BlockTemplate.vue";
 import { getFinishing } from "../../modules/repository";
 
@@ -71,7 +71,7 @@ export default defineComponent({
         finish: "",
         finishings: [] as FlowerBoxFinishing[],
         type: "standard" as "standard" | "skyline",
-        selectedBlock: {},
+        selectedBlock: {}as { label: string, value: string },
         standardBlocks: [
           {
             value: "50x50_50",
