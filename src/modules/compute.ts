@@ -1952,7 +1952,7 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                     computeResult.giuntoBasso += 1;
                     computeResult.tiranteOrizzontale += 1;
                     computeResult.angolare += 2;
-                    computeResult.squadrettaAncoraggio += 2;
+                    computeResult.squadrettaAncoraggio += 1;
                 } else if (heights[0] == 50 && heights[1] == 50 && heights[2] == 75) {
                     computeResult.giuntoBasso += 1;
                     computeResult.tiranteOrizzontale += 1;
@@ -2014,12 +2014,6 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                     computeResult.tiranteOrizzontale += 1;
                     computeResult.angolare += 4;
                     computeResult.squadrettaAncoraggio += 1;
-                } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 50) {
-                    computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 1;
-                    computeResult.angolare += 4;
-                    computeResult.squadrettaAncoraggio += 1;
-                    computeResult.piastraL += 1;
                 } else if (heights[0] == 75 && heights[1] == 50 && heights[2] == 75) {
                     computeResult.giuntoAlto += 2;
                     computeResult.giuntoBasso += 1;
@@ -2042,12 +2036,31 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                     computeResult.tiranteOrizzontale += 2;
                     computeResult.angolare += 4;
                     computeResult.squadrettaAncoraggio += 1;
-                } else if (heights[0] == 75 && heights[1] == 100 && heights[2] == 75) {
-                    computeResult.giuntoAlto += 2;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 75) {
                     computeResult.giuntoBasso += 1;
-                    computeResult.tiranteOrizzontale += 1.5;
-                    computeResult.angolare += 4;
+                    computeResult.giuntoAlto += 2;
+                    computeResult.tiranteOrizzontale += 2;
+                    computeResult.angolare += 3;
                     computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 100) {
+                    computeResult.giuntoBasso += 1;
+                    computeResult.angolare += 3;
+                    computeResult.tiranteOrizzontale += 2;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 100 && heights[1] == 50 && heights[2] == 100) {
+                    computeResult.giuntoAlto += 2;
+                    computeResult.tiranteOrizzontale += 1.5;
+                    computeResult.angolare += 2;
+                    computeResult.giuntoBasso += 1;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else if (heights[0] == 100 && heights[1] == 50 && heights[2] == 50) {
+                    computeResult.angolare += 4;
+                    computeResult.tiranteOrizzontale += 1;
+                    computeResult.piastraL += 1;
+                    computeResult.giuntoBasso += 1;
+                    computeResult.squadrettaAncoraggio += 1;
+                } else {
+                    alert(`COMBINAZIONE MANCANTE => ${heights[0]} - ${heights[1]} - ${heights[2]}`);
                 }
             } else if (p.type == "central") {
                 const heights: (number | null)[] = [cell.height];
@@ -2362,7 +2375,7 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                 } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 75 && heights[3] == 75) {
                     computeResult.giuntoAlto            += 2;
                     computeResult.giuntoBasso           += 0;
-                    computeResult.tiranteOrizzontale    += 1;
+                    computeResult.tiranteOrizzontale    += 2;
                     computeResult.tiranteObliquo        += 0;
                     computeResult.tiranteObliquoH50     += 2;
                     computeResult.tiranteObliquoH75     += 1;
@@ -2431,6 +2444,45 @@ export function getAccessori(singleSlab: boolean, selectedCellSections: Selected
                     computeResult.piastraL              += 0;
                     computeResult.allinZ                += 0;
                     computeResult.allinL                += 0;
+                } else if (heights[0] == 50 && heights[1] == 100 && heights[2] == 100 && heights[3] == 100) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 2;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 2;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                } else if (heights[0] == 100 && heights[1] == 100 && heights[2] == 50 && heights[3] == 100) {
+                    computeResult.giuntoAlto            += 0;
+                    computeResult.giuntoBasso           += 0;
+                    computeResult.tiranteOrizzontale    += 2;
+                    computeResult.tiranteObliquo        += 0;
+                    computeResult.tiranteObliquoH50     += 0;
+                    computeResult.tiranteObliquoH75     += 0;
+                    computeResult.tiranteObliquoH100    += 0;
+                    computeResult.piantana              += 1;
+                    computeResult.angolare              += 2;
+                    computeResult.squadrettaAncoraggio  += 0;
+                    computeResult.elementoCrocera       += 0;
+                    computeResult.spinottoCorto         += 0;
+                    computeResult.piastraLineare        += 0;
+                    computeResult.piastraAngolare       += 0;
+                    computeResult.piastraL              += 0;
+                    computeResult.allinZ                += 0;
+                    computeResult.allinL                += 0;
+                }
+                else {
+                    alert(`COMBINAZIONE MANCANTE => ${heights[0]} - ${heights[1]} - ${heights[2]} - ${heights[3]}`);
                 }
             }
         }
